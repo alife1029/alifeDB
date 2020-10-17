@@ -14,12 +14,16 @@ namespace alifeDB.Database
             fs.Close();
         }
         
+        // Veritabanını okur
         public static void LoadDB(Database database)
         {
             FileStream fs = new FileStream(database.GetString(), FileMode.Open, FileAccess.Read);
             BinaryFormatter formatter = new BinaryFormatter();
-            database = (Database)formatter.Deserialize(fs);
+            Database readedDatabase = (Database)formatter.Deserialize(fs);
             fs.Close();
+
+            database.dbString = readedDatabase.dbString;
+            database.tables = readedDatabase.tables;
         }
     }
 }
