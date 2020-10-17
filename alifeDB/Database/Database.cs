@@ -12,11 +12,21 @@ namespace alifeDB.Database
         public Database(string dbString)
         {
             this.dbString = dbString;
-            tables = null;
+            tables = new List<Table>();
         }
 
-        public string GetString() { return dbString; }
+        public string GetString() => dbString;
 
+        public void AddTable(Table table) => tables.Add(table);
+        public void DeleteTable(string tableName)
+        {
+            foreach (Table table in tables)
+                if (table.GetName() == tableName)
+                {
+                    tables.Remove(table);
+                    return;
+                }
+        }
         public Table GetTable(string tableName)
         {
             foreach(Table table in tables)
@@ -27,5 +37,6 @@ namespace alifeDB.Database
 
             return null;
         }
+        public List<Table> GetTables() => tables;
     }
 }

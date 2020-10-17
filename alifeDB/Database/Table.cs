@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace alifeDB.Database
 {
+    [Serializable]
     public class Table
     {
         private readonly string tableName;

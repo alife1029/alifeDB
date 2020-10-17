@@ -33,6 +33,7 @@
             this.tbDatabasePath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
+            this.databaseTablesTabControl = new System.Windows.Forms.TabControl();
             this.SuspendLayout();
             // 
             // label1
@@ -50,22 +51,31 @@
             resources.ApplyResources(this.btnBrowse, "btnBrowse");
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            this.btnBrowse.Click += new System.EventHandler(this.BtnBrowse_Click);
             // 
             // btnOpen
             // 
             resources.ApplyResources(this.btnOpen, "btnOpen");
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Click += new System.EventHandler(this.BtnOpen_Click);
+            // 
+            // databaseTablesTabControl
+            // 
+            resources.ApplyResources(this.databaseTablesTabControl, "databaseTablesTabControl");
+            this.databaseTablesTabControl.Name = "databaseTablesTabControl";
+            this.databaseTablesTabControl.SelectedIndex = 0;
             // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.databaseTablesTabControl);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.tbDatabasePath);
             this.Controls.Add(this.label1);
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -78,6 +88,7 @@
         private System.Windows.Forms.TextBox tbDatabasePath;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.TabControl databaseTablesTabControl;
     }
 }
 

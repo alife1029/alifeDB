@@ -7,18 +7,20 @@ namespace Sandbox
     {
         static void Main(string[] args)
         {
-            Database db = new Database(@"C:\users\alife\Desktop\dbSave.alfdb");
-            SaveSystem.LoadDB(db);
+            Database myDB = new Database(@"C:\Users\alife\Desktop\mydb.alfdb");
+            Console.WriteLine("Database object created!");
 
-            /*try
-            {
-                SaveSystem.SaveDB(db);
-            }
-            catch (AlifeDBException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }*/
+            myDB.AddTable(new Table("Students"));
+            myDB.AddTable(new Table("Teachers"));
+            myDB.AddTable(new Table("Staff"));
+            myDB.AddTable(new Table("StudentMarks"));
+            myDB.AddTable(new Table("Prizes"));
+            Console.WriteLine("Tables appended");
 
+            SaveSystem.SaveDB(myDB);
+            Console.WriteLine("Database saved!");
+
+            Console.Write("Press any key to continue...");
             Console.ReadKey();
         }
     }
