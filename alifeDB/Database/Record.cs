@@ -6,10 +6,14 @@ namespace alifeDB.Database
     [Serializable]
     public class Record
     {
+        // Kaydın kimliği
+        private readonly UInt64 id;
+        // Kayıt içerisindeki veriler
         private List<DataCell> values;
 
-        public Record(Table baseTable)
+        public Record(Table baseTable, UInt64 id)
         {
+            this.id = id;
             values = new List<DataCell>();
             List<Column> columns = baseTable.columns;
 
@@ -18,6 +22,8 @@ namespace alifeDB.Database
                 values.Add(new DataCell(c, null));
             }
         }
+
+        public UInt64 GetID() => id;
 
         public void SetAllValues(string[] columnNames, object[] values)
         {

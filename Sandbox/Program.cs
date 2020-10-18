@@ -7,14 +7,14 @@ namespace Sandbox
     {
         static void Main(string[] args)
         {
-            Database myDB = new Database(@"C:\Users\alife\Desktop\mydb.alfdb");
+            Database myDB = new Database(@"C:\Users\alife\Desktop\mydb.alfdb", "myDB");
             Console.WriteLine("Database object created!");
 
-            myDB.AddTable(new Table("Students"));
-            myDB.AddTable(new Table("Teachers"));
-            myDB.AddTable(new Table("Staff"));
-            myDB.AddTable(new Table("StudentMarks"));
-            myDB.AddTable(new Table("Prizes"));
+            myDB.AddTable(new Table("Students", "myDB"));
+            myDB.AddTable(new Table("Teachers", "myDB"));
+            myDB.AddTable(new Table("Staff", "myDB"));
+            myDB.AddTable(new Table("StudentMarks", "myDB"));
+            myDB.AddTable(new Table("Prizes", "myDB"));
             Console.WriteLine("Tables appended");
 
             Table studentsTable = myDB.GetTable("Students");
@@ -31,20 +31,20 @@ namespace Sandbox
             studentsTable.AddColumn("Sınıf");
             studentsTable.AddColumn("Şube");
 
-            Record alifegur = new Record(studentsTable);
+            Record alifegur = new Record(studentsTable, 0);
             alifegur.SetAllValues(new string[] { "ID", "Ad", "Soyad", "No", "Sınıf", "Şube" },
-                                  new object[] { 1, "Ali Efe", "Gür", 247, 11, 'B' });
-            Record orhunegegur = new Record(studentsTable);
+                                  new object[] { 0, "Ali Efe", "Gür", 247, 11, 'B' });
+            Record orhunegegur = new Record(studentsTable, 1);
             orhunegegur.SetAllValues(new string[] { "ID", "Ad", "Soyad", "No", "Sınıf", "Şube" },
-                                  new object[] { 2, "Orhun Ege", "Gür", 60, 7, 'H' });
-            Record edagokcegur = new Record(studentsTable);
+                                  new object[] { 1, "Orhun Ege", "Gür", 60, 7, 'H' });
+            Record edagokcegur = new Record(studentsTable, 2);
             edagokcegur.SetAllValues(new string[] { "ID", "Ad", "Soyad", "No", "Sınıf", "Şube" },
-                                  new object[] { 3, "Eda Gökçe", "Gür", 57, 1, 'A' });
+                                  new object[] { 2, "Eda Gökçe", "Gür", 57, 1, 'A' });
 
             Console.WriteLine("Öğrenci bilgileri düzenendi");
 
             SaveSystem.SaveDB(myDB);
-            Console.WriteLine("Database saved!");
+            Console.WriteLine("Veritabanı kaydedildi");
 
             Console.Write("Press any key to continue...");
             Console.ReadKey();
