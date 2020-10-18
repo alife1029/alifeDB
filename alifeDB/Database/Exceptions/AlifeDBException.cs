@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace alifeDB
+namespace alifeDB.Database.Exceptions
 {
     [Serializable]
     public class AlifeDBException : Exception

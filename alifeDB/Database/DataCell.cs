@@ -15,6 +15,7 @@ namespace alifeDB.Database
             this.data = data;
         }
 
+        public void SetData(object data) => this.data = data;
         public object GetData() => data;
         public Column GetColumn() => column;
     }

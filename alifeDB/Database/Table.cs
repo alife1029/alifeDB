@@ -13,8 +13,8 @@ namespace alifeDB.Database
         public Table(string tableName)
         {
             this.tableName = tableName;
-            columns = null;
-            records = null;
+            columns = new List<Column>();
+            records = new List<Record>();
         }
 
         public void AddColumn(string columnName) => columns.Add(new Column(columnName));

@@ -4,6 +4,7 @@ using System.Text;
 
 namespace alifeDB.Database
 {
+    [Serializable]
     public struct Column
     {
         private readonly string columnName;
