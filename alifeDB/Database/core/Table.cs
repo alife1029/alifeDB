@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace alifeDB.Database
+namespace alifeDB.Database.Core
 {
     [Serializable]
     public class Table
@@ -14,7 +14,7 @@ namespace alifeDB.Database
         // Tablo içerisindeki sütunlar
         internal List<Column> columns;
         // Tabloda bulunan kayıtlar
-        private List<Record> records;
+        internal List<Record> records;
 
         // Tablo constructor'ı parametresine tablonun adını alır
         public Table(string tableName, string dbName)

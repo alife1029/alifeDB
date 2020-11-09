@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace alifeDB.Database
+namespace alifeDB.Database.Core
 {
     [Serializable]
     public class Database
     {
         // Veritabanının adı
-        private readonly string dbName;
+        internal readonly string dbName;
         // Veritabanının kaydının dosya sistemindeki konumu
         internal string dbString;
         // Veritabanında bulunan tablolar
@@ -67,6 +67,6 @@ namespace alifeDB.Database
             throw new AlifeDBException("Table not found!", dbName, null);
         }
         // Tablolar listesinin tamamını döndürür
-        public List<Table> GetTables() => tables;
+        public List<Table> GetTables() => tables
     }
 }

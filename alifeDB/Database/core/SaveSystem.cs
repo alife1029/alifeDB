@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace alifeDB.Database
+namespace alifeDB.Database.Core
 {
     public class SaveSystem
     {

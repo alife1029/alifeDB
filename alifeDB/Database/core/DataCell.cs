@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace alifeDB.Database
+namespace alifeDB.Database.Core
 {
     public class DataCell
     {
