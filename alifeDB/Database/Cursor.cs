@@ -69,7 +69,7 @@ namespace alifeDB.Database
         {
             // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
             if (columns.Length != values.Length)
-                throw new AlfDBArgumentException("Coumns count and values count must me equal!");
+                throw new AlfDBArgumentException("Column count and value count must me equal!");
 
             // Eğer imleç bir tabloyu göstermiyorsa hata döndür.
             if (table == null)
@@ -147,7 +147,7 @@ namespace alifeDB.Database
 
             // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
             if (columns.Length != values.Length)
-                throw new AlfDBArgumentException("Coumns count and values count must me equal!");
+                throw new AlfDBArgumentException("Column count and value count must me equal!");
 
             // Kaç koşul sağlandı?
             int providedConditionCount = 0;
