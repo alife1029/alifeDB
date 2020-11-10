@@ -34,7 +34,7 @@ namespace alifeDB.Database.Core
             foreach(Table t in tables)
             {
                 if (t.GetName() == table.GetName())
-                    throw new AlifeDBException("Table already exists!", dbName, null);
+                    throw new AlfDBException("Table already exists!", dbName, null);
             }
             
             // Sorun yoksa yeni tabloyu listeye ekler
@@ -52,7 +52,7 @@ namespace alifeDB.Database.Core
                 }
 
             // Eğer o isme sahip bir tablo yoksa hata döndürür
-            throw new AlifeDBException("Table not found!", dbName, null);
+            throw new AlfDBException("Table not found!", dbName, null);
         }
         // Parametreye girilen isimdeki tabloyu döndürür
         public Table GetTable(string tableName)
@@ -64,7 +64,7 @@ namespace alifeDB.Database.Core
             }
 
             // Eğer o isimde tablo yoksa hata döndürür
-            throw new AlifeDBException("Table not found!", dbName, null);
+            throw new AlfDBException("Table not found!", dbName, null);
         }
         // Tablolar listesinin tamamını döndürür
         public List<Table> GetTables() => tables

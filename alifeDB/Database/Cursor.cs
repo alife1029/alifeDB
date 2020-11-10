@@ -67,7 +67,9 @@ namespace alifeDB.Database
         /// <exception cref="TableDidNotSetException"></exception>
         public void AddRecord(UInt64 id, string[] columns, object[] values)
         {
-            // TODO: Eğer parametreye girilen sütun sayısıyla değer sayısı aynı değilse hata döndür
+            // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
+            if (columns.Length != values.Length)
+                throw new AlfDBArgumentException("Coumns count and values count must me equal!");
 
             // Eğer imleç bir tabloyu göstermiyorsa hata döndür.
             if (table == null)
@@ -143,7 +145,9 @@ namespace alifeDB.Database
             if (table == null)
                 throw new TableDidNotSetException("You must set a table before delete any record!", this);
 
-            // TODO: Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndür
+            // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
+            if (columns.Length != values.Length)
+                throw new AlfDBArgumentException("Coumns count and values count must me equal!");
 
             // Kaç koşul sağlandı?
             int providedConditionCount = 0;
