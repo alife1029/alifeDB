@@ -1,9 +1,11 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -53,6 +55,35 @@ namespace GUI
             // Okunan veritabanına göre sekmeleri ekler
             foreach (Table t in tables)
                 databaseTablesTabControl.TabPages.Add(t.GetName());
+
+            // Sekmeye kayıtları ekler
+            CreateDataGrid(databaseTablesTabControl.TabPages[0]);
+        }
+
+        private void CreateDataGrid(Control parent)
+        {
+            DataGridView dataGridView = new DataGridView
+            {
+                Parent = databaseTablesTabControl.TabPages[0],
+                Location = new Point(0, 0),
+                Height = parent.Height,
+                Width = parent.Width
+            };
+
+            Table currentTable = db.GetTable(parent.Text);
+
+            for (int i = 0; i < 3; i++)
+            {
+                Record currentRecord = currentTable.GetRecord(Convert.ToUInt64(i));
+                object[] currentDatas = new object[6];
+
+                for (int j = 0; j < 6; j++)
+                {
+                    
+                }
+
+                dataGridView.Rows.Add();
+            }
         }
     }
 }

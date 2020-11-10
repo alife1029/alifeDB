@@ -26,7 +26,7 @@ namespace alifeDB.Database.Core
         }
 
         // Tabloya sütun ekler
-        public void AddColumn(string columnName)
+        internal void AddColumn(string columnName)
         {
             // Eğer aynı isimde bir sütun varsa hata döndürür
             foreach (Column c in columns)

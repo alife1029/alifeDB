@@ -9,7 +9,7 @@ namespace alifeDB.Database.Core
         // Kaydın kimliği
         private readonly UInt64 id;
         // Kayıt içerisindeki veriler
-        private List<DataCell> values;
+        internal List<DataCell> values;
 
         public Record(Table baseTable, UInt64 id)
         {

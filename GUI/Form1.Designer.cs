@@ -75,6 +75,7 @@
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.tbDatabasePath);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.ResumeLayout(false);
