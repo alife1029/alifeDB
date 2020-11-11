@@ -67,6 +67,6 @@ namespace alifeDB.Database.Core
             throw new AlfDBException("Table not found!", dbName, null);
         }
         // Tablolar listesinin tamamını döndürür
-        public List<Table> GetTables() => tables
+        public List<Table> GetTables() => tables;
     }
 }

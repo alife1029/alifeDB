@@ -9,10 +9,10 @@ namespace alifeDB.Database.Exceptions
     {
         public string dbName;
         public string tableName;
-        public Cursor cursor;
+        public DatabaseCursor cursor;
 
         public RecordDidNotFoundException() { }
-        public RecordDidNotFoundException(string message, string dbName, string tableName, Cursor cursor) : base(message)
+        public RecordDidNotFoundException(string message, string dbName, string tableName, DatabaseCursor cursor) : base(message)
         {
             this.dbName = dbName;
             this.tableName = tableName;

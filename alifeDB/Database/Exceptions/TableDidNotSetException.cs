@@ -6,10 +6,10 @@ namespace alifeDB.Database.Exceptions
 {
     class TableDidNotSetException : Exception
     {
-        public Cursor cursor;
+        public DatabaseCursor cursor;
 
         public TableDidNotSetException() { }
-        public TableDidNotSetException(string message, Cursor cursor) : base(message)
+        public TableDidNotSetException(string message, DatabaseCursor cursor) : base(message)
         {
             this.cursor = cursor;
         }

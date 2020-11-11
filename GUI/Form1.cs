@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using alifeDB.Database;
+using alifeDB.Database.Core;
 
 namespace GUI
 {
@@ -17,11 +18,12 @@ namespace GUI
     {
         private string fileName;
         private string filePath;
-        private Database db;
+        private readonly DatabaseCursor db;
 
         public Form1()
         {
             InitializeComponent();
+            db = new DatabaseCursor();
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -41,8 +43,7 @@ namespace GUI
 
         private void BtnOpen_Click(object sender, EventArgs e)
         {
-
-            db = SaveSystem.LoadDB(filePath);
+            db.Connect(filePath, fileName);
 
             List<Table> tables = db.GetTables();
 
@@ -72,7 +73,7 @@ namespace GUI
 
             Table currentTable = db.GetTable(parent.Text);
 
-            for (int i = 0; i < 3; i++)
+            /*for (int i = 0; i < 1; i++)
             {
                 Record currentRecord = currentTable.GetRecord(Convert.ToUInt64(i));
                 object[] currentDatas = new object[6];
@@ -83,7 +84,7 @@ namespace GUI
                 }
 
                 dataGridView.Rows.Add();
-            }
+            }*/
         }
     }
 }

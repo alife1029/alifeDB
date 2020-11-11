@@ -1,26 +1,54 @@
 ﻿using alifeDB.Database.Core;
 using alifeDB.Database.Exceptions;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace alifeDB.Database
 {
     /// <summary>
     /// Veritabanının içerisinde gezinip kaydetme, güncelleme, silme gibi işlemlerin yapılmasını sağlar.
     /// </summary>
-    public class Cursor
+    public class DatabaseCursor
     {
         // Bulunduğu veritabanı
-        private readonly Core.Database database;
+        private Core.Database database;
         // Bulunduğu tablo
         private Table table;
 
 
-        public Cursor(Core.Database database)
+        public DatabaseCursor()
+        {
+            database = null;
+            table = null;
+        }
+        public DatabaseCursor(Core.Database database)
         {
             this.database = database;
             table = null;
         }
 
+        /// <summary>
+        /// Belirtilen yoldaki veritabanı dosyasıyla bağlantı kurar. Eğer velirtilen yolda
+        /// veritabanı dosyası mevcut değilse yeni bir veritabanı dosyası oluşturur.
+        /// </summary>
+        /// <param name="databasePath">Veritabanı dosyasının dosya sistemindeki konumu.</param>
+        /// <param name="databaseName">Veritabanı adı.</param>
+        public void Connect(string databasePath, string databaseName)
+        {
+            // Eğer dosya mevcutsa dosyayı okur ve metodu bitirir
+            if (File.Exists(databasePath))
+            {
+                database = SaveSystem.LoadDB(databasePath);
+                return;
+            }
+
+            // Eğer dosya yoksa yeni dosya oluşturur
+            database = new Core.Database(databasePath, databaseName);
+            table = null;
+            Commit();
+        }
+        
         /// <summary>
         /// İmlecin veritabanı içerisindeki bir tabloya gitmesini sağlar.
         /// </summary>
@@ -29,7 +57,7 @@ namespace alifeDB.Database
         public void GoToTable(string tableName)
         {
             // Veritabanında bulunan tüm tabloların isimleri ile parametrede girilen değeri karşılaştırır
-            foreach(Table t in this.database.GetTables())
+            foreach(Table t in database.GetTables())
                 // Eğer aynı adda tablo bulunduysa o tabloyu table değişkenine atar ve metod bitirilir
                 if (t.GetName() == tableName)
                 {
@@ -46,18 +74,52 @@ namespace alifeDB.Database
         /// </summary>
         /// <param name="tableName">Veritabanına elenecek olan tablonun adı</param>
         /// <param name="columns">Tablonun içerisinde bulunacak olan sütunlar</param>
+        /// <exception cref="TableAlreadyExistsException"></exception>
         public void CreateTable(string tableName, string[] columns)
         {
             // Eğer aynı adda tablo varsa hata döndür
             foreach (Table t in database.tables)
-                if (t.GetName() == tableName)
+                if (t.GetName().Equals(tableName))
                     throw new TableAlreadyExistsException("Table already exists!", database.dbName, tableName, this);
 
             // Yeni tablo oluşturup veritabanına ekler
             Table table = new Table(tableName, database.GetName());
             for (int i = 0; i < columns.Length; i++)
                 table.AddColumn(columns[i]);
+            database.tables.Add(table);
         }
+        /// <summary>
+        /// Veritabanına yeni tablo ekler. Eğer aynı adda bir tablo zaten mevcutsa herhangi bir değişiklik yapmaz.
+        /// </summary>
+        /// <param name="tableName">Veritabanına elenecek olan tablonun adı</param>
+        /// <param name="columns">Tablonun içerisinde bulunacak olan sütunlar</param>
+        public void CreateTableIfNotExists(string tableName, string[] columns)
+        {
+            // Eğer aynı adda tablo varsa metodu bitir
+            foreach (Table t in database.tables)
+                if (t.GetName() == tableName)
+                    return;
+
+            // Yeni tablo oluşturup veritabanına ekler
+            Table table = new Table(tableName, database.GetName());
+            for (int i = 0; i < columns.Length; i++)
+                table.AddColumn(columns[i]);
+
+            database.tables.Add(table);
+        }
+
+        public Table GetTable(string tableName)
+        {
+            foreach (Table table in database.GetTables())
+            {
+                if (table.GetName() == tableName)
+                    return table;
+            }
+
+            // Eğer o isimde tablo yoksa hata döndürür
+            throw new AlfDBException("Table not found!", database.GetString(), null);
+        }
+        public List<Table> GetTables() => database.GetTables();
 
         /// <summary>
         /// İmlecin içerisinde bulunduğu tabloya kayıt eklemesini sağlar.

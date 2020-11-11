@@ -7,44 +7,45 @@ namespace Sandbox
     {
         static void Main(string[] args)
         {
-            Database myDB = new Database(@"C:\Users\alife\Desktop\mydb.alfdb", "myDB");
-            Console.WriteLine("Database object created!");
+            DatabaseCursor database = new DatabaseCursor();
+            database.Connect(@"C:\Users\Ali Efe GÜR\Desktop\database.alfdb", "database");
 
-            myDB.AddTable(new Table("Students", "myDB"));
-            myDB.AddTable(new Table("Teachers", "myDB"));
-            myDB.AddTable(new Table("Staff", "myDB"));
-            myDB.AddTable(new Table("StudentMarks", "myDB"));
-            myDB.AddTable(new Table("Prizes", "myDB"));
-            Console.WriteLine("Tables appended");
+            database.CreateTableIfNotExists("personalData", new string[] {
+                "id", 
+                "name", 
+                "last_name"
+            });
+            database.CreateTableIfNotExists("students", new string[] {
+                "number",
+                "class",
+                "markAverage"
+            });
 
-            Table studentsTable = myDB.GetTable("Students");
-            Table teachersTable = myDB.GetTable("Teachers");
-            Table staffTable = myDB.GetTable("Staff");
-            Table marksTable = myDB.GetTable("StudentMarks");
-            Table prızesTable = myDB.GetTable("Prizes");
-            Console.WriteLine("Veritabanında oluşturulan tablolar GetTable() metodu ile alındı");
+            database.Commit();
 
-            studentsTable.AddColumn("ID");
-            studentsTable.AddColumn("Ad");
-            studentsTable.AddColumn("Soyad");
-            studentsTable.AddColumn("No");
-            studentsTable.AddColumn("Sınıf");
-            studentsTable.AddColumn("Şube");
+            database.GoToTable("students");
 
-            Record alifegur = new Record(studentsTable, 0);
-            alifegur.SetAllValues(new string[] { "ID", "Ad", "Soyad", "No", "Sınıf", "Şube" },
-                                  new object[] { 0, "Ali Efe", "Gür", 247, 11, 'B' });
-            Record orhunegegur = new Record(studentsTable, 1);
-            orhunegegur.SetAllValues(new string[] { "ID", "Ad", "Soyad", "No", "Sınıf", "Şube" },
-                                  new object[] { 1, "Orhun Ege", "Gür", 60, 7, 'H' });
-            Record edagokcegur = new Record(studentsTable, 2);
-            edagokcegur.SetAllValues(new string[] { "ID", "Ad", "Soyad", "No", "Sınıf", "Şube" },
-                                  new object[] { 2, "Eda Gökçe", "Gür", 57, 1, 'A' });
 
-            Console.WriteLine("Öğrenci bilgileri düzenendi");
+            for (int i = 0; i < 100000; i++)
+            {
+                database.AddRecord(Convert.ToUInt64(i), new string[] {
+                    "id",
+                    "name",
+                    "last_name"
+                }, new string[] {
+                    i.ToString(),
+                    "Ali Efe",
+                    "GÜR"
+                });
 
-            SaveSystem.SaveDB(myDB);
-            Console.WriteLine("Veritabanı kaydedildi");
+
+                Console.WriteLine(i.ToString() + ". Record append");
+            }
+
+
+            Console.WriteLine("Database saving...");
+            database.Commit();
+            Console.WriteLine("Database saved!");
 
             Console.Write("Press any key to continue...");
             Console.ReadKey();
