@@ -66,7 +66,7 @@ namespace alifeDB.Database
                 }
 
             // Eğer metod bitmemişse (tablo bulunamamışsa) hata döner
-            throw new TableDidNotFoundException("Table did not found named " + tableName + " !!!", database.dbName, this);
+            throw new TableDidNotFoundException("\"" + tableName + "\" isimli tablo bulunamadı!!!", database.dbName, this);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace alifeDB.Database
             // Eğer aynı adda tablo varsa hata döndür
             foreach (Table t in database.tables)
                 if (t.GetName().Equals(tableName))
-                    throw new TableAlreadyExistsException("Table already exists!", database.dbName, tableName, this);
+                    throw new TableAlreadyExistsException("Tablo zaten mevcut!", database.dbName, tableName, this);
 
             // Yeni tablo oluşturup veritabanına ekler
             Table table = new Table(tableName, database.GetName());
@@ -117,7 +117,7 @@ namespace alifeDB.Database
             }
 
             // Eğer o isimde tablo yoksa hata döndürür
-            throw new AlfDBException("Table not found!", database.GetString(), null);
+            throw new AlfDBException("Tablo bulunamadı!", database.GetString(), null);
         }
         public List<Table> GetTables() => database.GetTables();
 
@@ -131,11 +131,11 @@ namespace alifeDB.Database
         {
             // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
             if (columns.Length != values.Length)
-                throw new AlfDBArgumentException("Column count and value count must me equal!");
+                throw new AlfDBArgumentException("Sütun sayısı ile veri sayısı birbirine eşit olmak zorundadır!");
 
             // Eğer imleç bir tabloyu göstermiyorsa hata döndür.
             if (table == null)
-                throw new TableDidNotSetException("You must set a table before add any record!", this);
+                throw new TableDidNotSetException("Veritabanına herhangi bir kayıt eklemeden önce bir tablo seçmek zorundasınız!", this);
 
             // Yeni bir kayıt nesnesi oluşturur ve değerleri içine atar
             Record record = new Record(table, id);
@@ -155,7 +155,7 @@ namespace alifeDB.Database
         {
             // Eğer imleç bir tablo göstermiyorsa hata döndür
             if (table == null)
-                throw new TableDidNotSetException("You must set a table before delete any record!", this);
+                throw new TableDidNotSetException("Herhangi bir kayıt silmeden önce bir tablo seçmek zorundasınız!", this);
 
             // Tüm kayıtları dolaşır ve id'si eşleşeni siler
             foreach(Record r in table.records)
@@ -166,7 +166,8 @@ namespace alifeDB.Database
                 }
 
             // Eğer o id'ye sahip bir kayıt yoksa hata döndürür
-            throw new RecordDidNotFoundException("Record not found with ID: " + id.ToString(), 
+            throw new RecordDidNotFoundException("Belirtilen kimliğe sahip kayıt bulunamadı!\n" +
+                                                "Kimlik: " + id.ToString(), 
                                                 database.dbName, table.GetName(), this);
         }
 
@@ -180,14 +181,14 @@ namespace alifeDB.Database
         {
             // Eğer tablo seçilmemişse hata döndürür
             if (table == null)
-                throw new TableDidNotSetException("You must set a table before delete any record!", this);
+                throw new TableDidNotSetException("Herhangi bir kayıt silmeden önce bir tablo seçmek zorundasınız!", this);
             // Eğer belirtilen index rekor sayısını aşıyorsa
             if (index >= table.records.Count)
-                throw new RecordDidNotFoundException("Record index out of range!", 
+                throw new RecordDidNotFoundException("Kayıt indeksi menzil dışında!", 
                                                     database.dbName, table.GetName(), this);
             // Eğer index sınıfdan küçükse
             if (index < 0)
-                throw new RecordDidNotFoundException("Record index can not be less than zero!",
+                throw new RecordDidNotFoundException("Kayıt indeksi sıfırdan küçük olamaz!",
                                                     database.dbName, table.GetName(), this);
 
 
@@ -205,11 +206,11 @@ namespace alifeDB.Database
         {
             // Eğer kullanıcı imleci bir tabloyla ilişkilendirmediyse hata döndür
             if (table == null)
-                throw new TableDidNotSetException("You must set a table before delete any record!", this);
+                throw new TableDidNotSetException("Herhangi bir kayıt silmeden önce bir tablo seçmeniz gerekir!", this);
 
             // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
             if (columns.Length != values.Length)
-                throw new AlfDBArgumentException("Column count and value count must me equal!");
+                throw new AlfDBArgumentException("Sütun sayısı veri sayasına eşit olmalıdır!");
 
             // Kaç koşul sağlandı?
             int providedConditionCount = 0;

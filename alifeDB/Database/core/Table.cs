@@ -31,7 +31,7 @@ namespace alifeDB.Database.Core
             // Eğer aynı isimde bir sütun varsa hata döndürür
             foreach (Column c in columns)
                 if (c.GetName() == columnName)
-                    throw new AlfDBException("Column already exists", dbName, tableName);
+                    throw new AlfDBException("Sütun zaten mevcut!", dbName, tableName);
 
             columns.Add(new Column(columnName));
         }
@@ -42,7 +42,7 @@ namespace alifeDB.Database.Core
             // Aynı id'ye sahip kayıt varsa hata döndürür
             foreach (Record r in records)
                 if (r.GetID() == record.GetID())
-                    throw new AlfDBException("Record with this id already exists!", dbName, tableName);
+                    throw new AlfDBException("Bu kimliğe sahip kayıt zaten mevcut!", dbName, tableName);
 
             // Sorun yoksa yeni kaydı listeye ekler
             records.Add(record);
@@ -57,7 +57,7 @@ namespace alifeDB.Database.Core
                     return record;
 
             // Kaydı bulamadıysa hata döndürür
-            throw new AlfDBException("Record not found!", dbName, tableName);
+            throw new AlfDBException("Kayıt bulunamadı!", dbName, tableName);
         }
 
         // Tablonun adını döndürür
