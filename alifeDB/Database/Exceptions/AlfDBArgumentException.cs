@@ -4,6 +4,7 @@ using System.Text;
 
 namespace alifeDB.Database.Exceptions
 {
+    [Serializable]
     class AlfDBArgumentException : Exception
     {
         public AlfDBArgumentException() { }

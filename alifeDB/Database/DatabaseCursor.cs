@@ -48,7 +48,7 @@ namespace alifeDB.Database
             table = null;
             Commit();
         }
-        
+
         /// <summary>
         /// İmlecin veritabanı içerisindeki bir tabloya gitmesini sağlar.
         /// </summary>
@@ -57,7 +57,7 @@ namespace alifeDB.Database
         public void GoToTable(string tableName)
         {
             // Veritabanında bulunan tüm tabloların isimleri ile parametrede girilen değeri karşılaştırır
-            foreach(Table t in database.GetTables())
+            foreach (Table t in database.GetTables())
                 // Eğer aynı adda tablo bulunduysa o tabloyu table değişkenine atar ve metod bitirilir
                 if (t.GetName() == tableName)
                 {
@@ -158,7 +158,7 @@ namespace alifeDB.Database
                 throw new TableDidNotSetException("Herhangi bir kayıt silmeden önce bir tablo seçmek zorundasınız!", this);
 
             // Tüm kayıtları dolaşır ve id'si eşleşeni siler
-            foreach(Record r in table.records)
+            foreach (Record r in table.records)
                 if (r.GetID() == id)
                 {
                     table.records.Remove(r);
@@ -167,7 +167,7 @@ namespace alifeDB.Database
 
             // Eğer o id'ye sahip bir kayıt yoksa hata döndürür
             throw new RecordDidNotFoundException("Belirtilen kimliğe sahip kayıt bulunamadı!\n" +
-                                                "Kimlik: " + id.ToString(), 
+                                                "Kimlik: " + id.ToString(),
                                                 database.dbName, table.GetName(), this);
         }
 
@@ -184,7 +184,7 @@ namespace alifeDB.Database
                 throw new TableDidNotSetException("Herhangi bir kayıt silmeden önce bir tablo seçmek zorundasınız!", this);
             // Eğer belirtilen index rekor sayısını aşıyorsa
             if (index >= table.records.Count)
-                throw new RecordDidNotFoundException("Kayıt indeksi menzil dışında!", 
+                throw new RecordDidNotFoundException("Kayıt indeksi menzil dışında!",
                                                     database.dbName, table.GetName(), this);
             // Eğer index sınıfdan küçükse
             if (index < 0)
@@ -218,18 +218,76 @@ namespace alifeDB.Database
             // Tablo içindeki tüm kayıtları dolaşır
             foreach (Record r in table.records)
                 // Kayıt içindeki tüm veri hücrelerini dolaşır
-                foreach(DataCell c in r.values)
+                foreach (DataCell c in r.values)
                     // Parametrede girilen tüm sütunları dolaşır
                     for (int i = 0; i < columns.Length; i++)
                         // Eğer istenilen şartın birini sağlamişsa
                         if (c.GetColumn().GetName() == columns[i] && c.GetData() == values[i])
                             // Eğer tüm koşullar sağlanmışsa
-                            if(++providedConditionCount == columns.Length)
+                            if (++providedConditionCount == columns.Length)
                             {
                                 // Şu an üzerinde durduğumuz kaydı siler ve metod sonlanır
                                 table.records.Remove(r);
                                 return;
                             }
+        }
+
+        /// <summary>
+        /// Belli bir id'ye sahip kaydı bir <c>Record</c> nesnesi olarak veritabanından çeker.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Record FetchRecord(UInt64 id)
+        {
+            // Eğer imleç bir tablo göstermiyorsa hata döndür
+            if (table == null)
+                throw new TableDidNotSetException("Herhangi bir kayıt çekmeden önce bir tablo seçmelisiniz!", this);
+
+            // Tüm kayıtları dolaşır ve id'si eşleşeni siler
+            foreach (Record r in table.records)
+                if (r.GetID() == id)
+                {
+                    return r;
+                }
+
+            // Eğer o id'ye sahip bir kayıt yoksa hata döndürür
+            throw new RecordDidNotFoundException("Belirtilen kimliğe sahip kayıt bulunamadı!\n" +
+                                                "Kayıt Kimliği: " + id.ToString(),
+                                                database.dbName, table.GetName(), this);
+        }
+
+        public object[] FetchData(UInt64 id, string[] columns)
+        {
+            // Tablo seçilmediyse hata döndürür
+            if (table == null)
+                throw new TableDidNotSetException("Herhangi bir veri çekmeden önce bir tablo seçmelisiniz!", this);
+
+            // Çekilen verilerin bulunduğu array
+            object[] fetchedDatas = new object[columns.Length];
+
+            // Sayaç
+            int counter = 0;
+            foreach (string s in columns)
+            {
+                // Belirtilen adda sütun var mı
+                bool isColumnFound = false;
+                
+                // Tablodaki tüm sütunları dolaşır
+                foreach (Column c in table.columns)
+                    // Eğer aynı adda sütun bulunduysa veriyi listeye ekler
+                    if (c.GetName() == s)
+                    {
+                        fetchedDatas[counter++] = table.GetRecord(id).GetValue(s);
+                        isColumnFound = true;
+                    }
+
+                // Belirtilen adda sütun yoksa hata döndür
+                if (!isColumnFound)
+                    throw new ColumnDidNotFoundException("\"" + s + "\" isimli sütun bulunamadı!",
+                                                        database.GetName(), table.GetName(), s, this);
+            }
+
+            return fetchedDatas;
         }
 
         /// <summary>
