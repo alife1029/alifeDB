@@ -1,5 +1,6 @@
 ﻿using System;
 using Sandbox.Examples;
+using Sandbox.Tests;
 
 namespace Sandbox
 {
@@ -10,9 +11,10 @@ namespace Sandbox
             // Menü
             Console.WriteLine(
                 "1 - Verileri Kaydet\n" +
-                "2 - Verileri Çek"
+                "2 - Verileri Çek\n" +
+                "3 - Kayıt Testi"
             );
-
+            
             // Basılan tuşu algılar
             ConsoleKeyInfo a = Console.ReadKey();
             Console.WriteLine("\n");
@@ -22,9 +24,11 @@ namespace Sandbox
             // Verileri Çeker
             else if (a.Key == ConsoleKey.NumPad2)
                 new FetchData();
+            else if (a.Key == ConsoleKey.NumPad3)
+                new Save();
 
             // Uygulama biter
-            Console.Write("Press any key to continue...");
+            Console.Write("\n\nPress any key to continue...");
             Console.ReadKey();
         }
     }

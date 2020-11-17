@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace alifeDB.Database.Core
 {
     [Serializable]
     public class DataCell
     {
-        private Column column;
+        private readonly Column column;
         private object data;
         
         public DataCell(Column column, object data)

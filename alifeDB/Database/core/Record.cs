@@ -6,14 +6,11 @@ namespace alifeDB.Database.Core
     [Serializable]
     public class Record
     {
-        // Kaydın kimliği
-        private readonly UInt64 id;
         // Kayıt içerisindeki veriler
         internal List<DataCell> values;
 
-        public Record(Table baseTable, UInt64 id)
+        public Record(Table baseTable)
         {
-            this.id = id;
             values = new List<DataCell>();
             List<Column> columns = baseTable.columns;
 
@@ -23,8 +20,6 @@ namespace alifeDB.Database.Core
             }
         }
 
-        public UInt64 GetID() => id;
-
         public void SetAllValues(string[] columnNames, object[] values)
         {
             for (int i = 0; i < columnNames.Length; i++)
@@ -33,7 +28,15 @@ namespace alifeDB.Database.Core
                 {
                     if (cell.GetColumn().GetName() == columnNames[i])
                     {
-                        cell.SetData(values[i]);
+                        // Eğer alan birincil anahtar değilse değeri ata
+                        if (!cell.GetColumn().IsPrimaryKey())
+                        {
+                            cell.SetData(values[i]);
+                            break;
+                        }
+
+                        // Eğer alan birincil anahtarsa değeri null yap
+                        cell.SetData(null);
                         break;
                     }
                 }

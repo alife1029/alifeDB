@@ -28,10 +28,17 @@ namespace alifeDB.Database.Core
         // Tabloya sütun ekler
         internal void AddColumn(string columnName)
         {
+            // Eğer sütun yoksa otomatik artan birincil anahtar ekler
+            if (columns.Count == 0)
+            {
+                columns.Add(new Column(columnName, true));
+                return;
+            }
+
             // Eğer aynı isimde bir sütun varsa hata döndürür
             foreach (Column c in columns)
                 if (c.GetName() == columnName)
-                    throw new AlfDBException("Sütun zaten mevcut!", dbName, tableName);
+                    throw new AlifeDBException("Sütun zaten mevcut!", dbName, tableName);
 
             columns.Add(new Column(columnName));
         }
@@ -39,25 +46,28 @@ namespace alifeDB.Database.Core
         // Tabloya yeni kayıt ekler
         public void AddRecord(Record record)
         {
-            // Aynı id'ye sahip kayıt varsa hata döndürür
-            foreach (Record r in records)
-                if (r.GetID() == record.GetID())
-                    throw new AlfDBException("Bu kimliğe sahip kayıt zaten mevcut!", dbName, tableName);
-
-            // Sorun yoksa yeni kaydı listeye ekler
+            // Yeni eklenecek kaydın birincil anahtarını ayarlar
+            int lastIndexPrimaryKey;
+            lastIndexPrimaryKey = records.Count > 0 ? (int)records[records.Count - 1].values[0].GetData() : 0;
+            record.values[0].SetData(lastIndexPrimaryKey + 1);
+            
             records.Add(record);
         }
 
-        // Tablodan kimlik numarasına göre kayıt çeker
-        public Record GetRecord(UInt64 id)
+        // Tablodan birincil anahtarına göre kayıt çeker
+        public Record GetRecordByPrimaryKey(int primaryKey)
         {
             // Tüm kayıtlara bakar
             foreach (Record record in records)
-                if (record.GetID() == id)
+                if ((int)record.values[0].GetData() == primaryKey)
                     return record;
 
             // Kaydı bulamadıysa hata döndürür
-            throw new AlfDBException("Kayıt bulunamadı!", dbName, tableName);
+            throw new AlifeDBException("Kayıt bulunamadı!", dbName, tableName);
+        }
+        public Record GetRecordByIndex(int index)
+        {
+            return records[index];
         }
 
         // Tablonun adını döndürür

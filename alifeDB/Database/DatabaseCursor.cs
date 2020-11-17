@@ -1,39 +1,25 @@
 ﻿using alifeDB.Database.Core;
 using alifeDB.Database.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace alifeDB.Database
 {
-    /// <summary>
-    /// Veritabanının içerisinde gezinip kaydetme, güncelleme, silme gibi işlemlerin yapılmasını sağlar.
-    /// </summary>
+    /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/DatabaseCursor/*'/>
     public class DatabaseCursor
     {
-        // Bulunduğu veritabanı
+        // İmlecin bulunduğu veritabanı
         private Core.Database database;
-        // Bulunduğu tablo
+        // İmlecin bulunduğu tablo
         private Table table;
-
 
         public DatabaseCursor()
         {
             database = null;
             table = null;
         }
-        public DatabaseCursor(Core.Database database)
-        {
-            this.database = database;
-            table = null;
-        }
 
-        /// <summary>
-        /// Belirtilen yoldaki veritabanı dosyasıyla bağlantı kurar. Eğer velirtilen yolda
-        /// veritabanı dosyası mevcut değilse yeni bir veritabanı dosyası oluşturur.
-        /// </summary>
-        /// <param name="databasePath">Veritabanı dosyasının dosya sistemindeki konumu.</param>
-        /// <param name="databaseName">Veritabanı adı.</param>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/Connect/*'/>
         public void Connect(string databasePath, string databaseName)
         {
             // Eğer dosya mevcutsa dosyayı okur ve metodu bitirir
@@ -49,11 +35,7 @@ namespace alifeDB.Database
             Commit();
         }
 
-        /// <summary>
-        /// İmlecin veritabanı içerisindeki bir tabloya gitmesini sağlar.
-        /// </summary>
-        /// <exception cref="TableDidNotFoundException"></exception>
-        /// <param name="tableName">İmlecin hareket edeceği tablonun adı</param>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/GoToTable/*'/>
         public void GoToTable(string tableName)
         {
             // Veritabanında bulunan tüm tabloların isimleri ile parametrede girilen değeri karşılaştırır
@@ -69,14 +51,15 @@ namespace alifeDB.Database
             throw new TableDidNotFoundException("\"" + tableName + "\" isimli tablo bulunamadı!!!", database.dbName, this);
         }
 
-        /// <summary>
-        /// Veritabanına yeni tablo ekler
-        /// </summary>
-        /// <param name="tableName">Veritabanına elenecek olan tablonun adı</param>
-        /// <param name="columns">Tablonun içerisinde bulunacak olan sütunlar</param>
-        /// <exception cref="TableAlreadyExistsException"></exception>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/CreateTable/*'/>
         public void CreateTable(string tableName, string[] columns)
         {
+            // Eğer aynı adda birden fazla sütun adı varsa hata döndürür
+            for (int i = 0; i < columns.Length; i++)
+                for (int j = 0; j < columns.Length; j++)
+                    if (i != j && columns[i] == columns[j])
+                        throw new AlifeDBArgumentException("Bir tablo içerisinde aynı isimde sütunlar olamaz!");
+
             // Eğer aynı adda tablo varsa hata döndür
             foreach (Table t in database.tables)
                 if (t.GetName().Equals(tableName))
@@ -88,17 +71,19 @@ namespace alifeDB.Database
                 table.AddColumn(columns[i]);
             database.tables.Add(table);
         }
-        /// <summary>
-        /// Veritabanına yeni tablo ekler. Eğer aynı adda bir tablo zaten mevcutsa herhangi bir değişiklik yapmaz.
-        /// </summary>
-        /// <param name="tableName">Veritabanına elenecek olan tablonun adı</param>
-        /// <param name="columns">Tablonun içerisinde bulunacak olan sütunlar</param>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/CreateTableIfNotExists/*'/>
         public void CreateTableIfNotExists(string tableName, string[] columns)
         {
             // Eğer aynı adda tablo varsa metodu bitir
             foreach (Table t in database.tables)
                 if (t.GetName() == tableName)
                     return;
+
+            // Eğer aynı adda birden fazla sütun adı varsa hata döndürür
+            for (int i = 0; i < columns.Length; i++)
+                for (int j = 0; j < columns.Length; j++)
+                    if (i != j && columns[i] == columns[j])
+                        throw new AlifeDBArgumentException("Bir tablo içerisinde aynı isimde sütunlar olamaz!");
 
             // Yeni tablo oluşturup veritabanına ekler
             Table table = new Table(tableName, database.GetName());
@@ -108,6 +93,7 @@ namespace alifeDB.Database
             database.tables.Add(table);
         }
 
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/GetTable/*'/>
         public Table GetTable(string tableName)
         {
             foreach (Table table in database.GetTables())
@@ -117,91 +103,53 @@ namespace alifeDB.Database
             }
 
             // Eğer o isimde tablo yoksa hata döndürür
-            throw new AlfDBException("Tablo bulunamadı!", database.GetString(), null);
+            throw new AlifeDBException("Tablo bulunamadı!", database.GetString(), null);
         }
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/GetTables/*'/>
         public List<Table> GetTables() => database.GetTables();
 
-        /// <summary>
-        /// İmlecin içerisinde bulunduğu tabloya kayıt eklemesini sağlar.
-        /// </summary>
-        /// <param name="columns">Kayıt içerisindeki sütunlar</param>
-        /// <param name="values">Kayıt içerisindeki değerler</param>
-        /// <exception cref="TableDidNotSetException"></exception>
-        public void AddRecord(UInt64 id, string[] columns, object[] values)
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/AddRecord/*'/>
+        public void AddRecord(string[] columns, object[] values)
         {
             // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
             if (columns.Length != values.Length)
-                throw new AlfDBArgumentException("Sütun sayısı ile veri sayısı birbirine eşit olmak zorundadır!");
+                throw new AlifeDBArgumentException("Sütun sayısı ile veri sayısı birbirine eşit olmak zorundadır!");
 
             // Eğer imleç bir tabloyu göstermiyorsa hata döndür.
             if (table == null)
                 throw new TableDidNotSetException("Veritabanına herhangi bir kayıt eklemeden önce bir tablo seçmek zorundasınız!", this);
 
+            // Columns parametresine tabloda var olmayan bir sütun girildiyse hata döndür
+            foreach(string s in columns)
+            {
+                bool isColumnExists = false;
+                foreach(Column c in table.columns)
+                    if (c.GetName() == s)
+                        isColumnExists = true;
+
+                if (!isColumnExists)
+                    throw new AlifeDBArgumentException("Tabloda \"" + s + "\" isimli sütun bulunmamakta!");
+            }
+
             // Yeni bir kayıt nesnesi oluşturur ve değerleri içine atar
-            Record record = new Record(table, id);
+            Record record = new Record(table);
             record.SetAllValues(columns, values);
 
             // Yeni kaydı tablodaki kayıtlar listesine ekler
             table.AddRecord(record);
         }
 
-        /// <summary>
-        /// İmlecin içerisinde bylunduğu tablodan ID'sine göre kayıt siler.
-        /// </summary>
-        /// <param name="id">Silinecek kaydın ID'si</param>
-        /// <exception cref="TableDidNotSetException"></exception>
-        /// <exception cref="RecordDidNotFoundException"></exception>
-        public void DeleteRecord(UInt64 id)
-        {
-            // Eğer imleç bir tablo göstermiyorsa hata döndür
-            if (table == null)
-                throw new TableDidNotSetException("Herhangi bir kayıt silmeden önce bir tablo seçmek zorundasınız!", this);
-
-            // Tüm kayıtları dolaşır ve id'si eşleşeni siler
-            foreach (Record r in table.records)
-                if (r.GetID() == id)
-                {
-                    table.records.Remove(r);
-                    return;
-                }
-
-            // Eğer o id'ye sahip bir kayıt yoksa hata döndürür
-            throw new RecordDidNotFoundException("Belirtilen kimliğe sahip kayıt bulunamadı!\n" +
-                                                "Kimlik: " + id.ToString(),
-                                                database.dbName, table.GetName(), this);
-        }
-
-        /// <summary>
-        /// Kaydın tablodaki indeksine göre kaydı siler.
-        /// </summary>
-        /// <param name="index">Silinecek kaydın indeksi.</param>
-        /// <exception cref="TableDidNotSetException"></exception>
-        /// <exception cref="RecordDidNotFoundException"></exception>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/DeleteRecordByIndex/*'/>
         public void DeleteRecord(int index)
         {
             // Eğer tablo seçilmemişse hata döndürür
             if (table == null)
                 throw new TableDidNotSetException("Herhangi bir kayıt silmeden önce bir tablo seçmek zorundasınız!", this);
-            // Eğer belirtilen index rekor sayısını aşıyorsa
-            if (index >= table.records.Count)
-                throw new RecordDidNotFoundException("Kayıt indeksi menzil dışında!",
-                                                    database.dbName, table.GetName(), this);
-            // Eğer index sınıfdan küçükse
-            if (index < 0)
-                throw new RecordDidNotFoundException("Kayıt indeksi sıfırdan küçük olamaz!",
-                                                    database.dbName, table.GetName(), this);
 
-
-            table.records.Remove(table.records[index]);
+            table.records.RemoveAt(index);
         }
 
-        /// <summary>
-        /// Parametreye girilen şartları sağlayan kayıtları siler.
-        /// </summary>
-        /// <param name="columns">Şart sütunları</param>
-        /// <param name="values">Şartın sağlanması için istenen değerler</param>
-        /// <exception cref="RecordDidNotFoundException"></exception>
-        /// <exception cref="TableDidNotSetException"></exception>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/DeleteRecordByCondition/*'/>
         public void DeleteRecord(string[] columns, object[] values)
         {
             // Eğer kullanıcı imleci bir tabloyla ilişkilendirmediyse hata döndür
@@ -210,7 +158,7 @@ namespace alifeDB.Database
 
             // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
             if (columns.Length != values.Length)
-                throw new AlfDBArgumentException("Sütun sayısı veri sayasına eşit olmalıdır!");
+                throw new AlifeDBArgumentException("Sütun sayısı veri sayasına eşit olmalıdır!");
 
             // Kaç koşul sağlandı?
             int providedConditionCount = 0;
@@ -232,31 +180,24 @@ namespace alifeDB.Database
                             }
         }
 
-        /// <summary>
-        /// Belli bir id'ye sahip kaydı bir <c>Record</c> nesnesi olarak veritabanından çeker.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Record FetchRecord(UInt64 id)
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/FetchRecordByIndex/*'/>
+        public object[][] FetchRecord(int index)
         {
             // Eğer imleç bir tablo göstermiyorsa hata döndür
             if (table == null)
                 throw new TableDidNotSetException("Herhangi bir kayıt çekmeden önce bir tablo seçmelisiniz!", this);
 
-            // Tüm kayıtları dolaşır ve id'si eşleşeni siler
-            foreach (Record r in table.records)
-                if (r.GetID() == id)
-                {
-                    return r;
-                }
+            object[][] fetchedRecord = new object[table.records[index].values.Count][];
+            for (int i = 0; i < table.records[index].values.Count; i++)
+            {
+                fetchedRecord[i][0] = table.records[index].values[i].GetColumn().GetName();
+                fetchedRecord[i][1] = table.records[index].values[i].GetData();
+            }
 
-            // Eğer o id'ye sahip bir kayıt yoksa hata döndürür
-            throw new RecordDidNotFoundException("Belirtilen kimliğe sahip kayıt bulunamadı!\n" +
-                                                "Kayıt Kimliği: " + id.ToString(),
-                                                database.dbName, table.GetName(), this);
+            return fetchedRecord;
         }
 
-        public object[] FetchData(UInt64 id, string[] columns)
+        public object[] FetchData(int index, string[] columns)
         {
             // Tablo seçilmediyse hata döndürür
             if (table == null)
@@ -277,7 +218,7 @@ namespace alifeDB.Database
                     // Eğer aynı adda sütun bulunduysa veriyi listeye ekler
                     if (c.GetName() == s)
                     {
-                        fetchedDatas[counter++] = table.GetRecord(id).GetValue(s);
+                        fetchedDatas[counter++] = table.GetRecordByIndex(index).GetValue(s);
                         isColumnFound = true;
                     }
 
@@ -290,9 +231,7 @@ namespace alifeDB.Database
             return fetchedDatas;
         }
 
-        /// <summary>
-        /// Veritabanını kaydeder
-        /// </summary>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/Commit/*'/>
         public void Commit()
         {
             SaveSystem.SaveDB(database);

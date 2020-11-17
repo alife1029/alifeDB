@@ -18,22 +18,17 @@ namespace Sandbox.Examples
                 İmlecin bulunduğu tabloda 0. indeksten 5. indekse kadar olan kayıttan 
                 id, ad ve soyad sütunlarındaki verileri çeker
             */
-            object[][] fetchedDatas = new object[5][];
-            for (int i = 0; i < 5; i++)
+            object[][] fetchedDatas = new object[4][];
+            for (int i = 0; i < 4; i++)
             {
                 fetchedDatas[i] = database.FetchData(
-                    Convert.ToUInt64(i), new string[] { "id", "name", "last_name" }
+                    i, new string[] { "id", "name", "last_name" }
                 );
             }
 
-            foreach(object[] o in fetchedDatas)
-            {
-                foreach(object i in o)
-                {
-                    Console.WriteLine(i.ToString());
-                }
-                Console.WriteLine();
-            }
+            for (int i = 0; i < fetchedDatas.Length; i++)
+                for (int j = 0; j < fetchedDatas[i].Length; j++)
+                    Console.WriteLine(fetchedDatas[i][j]);
         }
     }
 }

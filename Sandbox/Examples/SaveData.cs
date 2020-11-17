@@ -19,16 +19,14 @@ namespace Sandbox.Examples
 
             database.Commit();
             database.GoToTable("personalData");
-            database.AddRecord(0, new string[] { "id", "name", "last_name" },
-                                new string[] { "0", "Ali Efe", "GÜR" });
-            database.AddRecord(1, new string[] { "id", "name", "last_name" },
-                                new string[] { "1", "Ahmet", "YILMAZ" });
-            database.AddRecord(2, new string[] { "id", "name", "last_name" },
-                                new string[] { "2", "Elif", "KORKMAZ" });
-            database.AddRecord(3, new string[] { "id", "name", "last_name" },
-                                new string[] { "3", "Fatih", "YILMAZ" });
-            database.AddRecord(4, new string[] { "id", "name", "last_name" },
-                                new string[] { "4", "Sude", "NUR" });
+            database.AddRecord( new string[] { "name", "last_name" },
+                                new string[] { "Ali Efe", "GÜR" });
+            database.AddRecord( new string[] { "name", "last_name" },
+                                new string[] { "Mehmet", "YILMAZ" });
+            database.AddRecord( new string[] { "name", "last_name" },
+                                new string[] { "Hale", "KAYA" });
+            database.AddRecord( new string[] { "name", "last_name" },
+                                new string[] { "Orhun Ege", "GÜR" });
 
             Console.WriteLine("Database saving...");
             database.Commit();

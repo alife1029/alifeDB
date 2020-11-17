@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <DatabaseCursor>
+    <summary>
+      Veritabanının içerisinde gezinip kaydetme, güncelleme, silme gibi işlemlerin yapılmasını sağlar.
+    </summary>
+  </DatabaseCursor>
+  <Connect>
+    <summary>
+      Belirtilen yoldaki veritabanı dosyasıyla bağlantı kurar. Eğer belirtilen yolda 
+      veritabanı dosyası mevcut değilse yeni bir veritabanı dosyası oluşturur.
+    </summary>
+    <param name="databasePath">Veritabanı dosyasının dosya sistemindeki konumu.</param>
+    <param name="databaseName">Veritabanı adı.</param>
+  </Connect>
+  <GoToTable>
+    <summary>
+      İmlecin veritabanı içerisindeki bir tabloya gitmesini sağlar.
+    </summary>
+    <exception cref="TableDidNotFoundException"></exception>
+    <param name="tableName">İmlecin hareket edeceği tablonun adı</param>
+  </GoToTable>
+  <CreateTable>
+    <summary>
+      Veritabanına yeni tablo ekler
+    </summary>
+    <param name="tableName">Veritabanına elenecek olan tablonun adı</param>
+    <param name="columns">Tablonun içerisinde bulunacak olan sütunlar. <strong>İlk eleman birincil anahtardır!</strong></param>
+    <exception cref="TableAlreadyExistsException"></exception>
+  </CreateTable>
+  <CreateTableIfNotExists>
+    <summary>
+      Veritabanına yeni tablo ekler. Eğer aynı adda bir tablo zaten mevcutsa herhangi bir değişiklik yapmaz.
+    </summary>
+    <param name="tableName">Veritabanına elenecek olan tablonun adı</param>
+    <param name="columns">Tablonun içerisinde bulunacak olan sütunlar. <strong>İlk eleman birincil anahtardır!</strong></param>
+  </CreateTableIfNotExists>
+  <GetTable>
+    <summary>
+      Parametrede girilen isme sahip tabloyu <c>Table</c> türünden bir nesne olarak döndürür.
+    </summary>
+    <param name="tableName">Tablo adı</param>
+    <returns>Girilen isme sahip tablo</returns>
+  </GetTable>
+  <GetTables>
+    <summary>
+      Veritabanında bulunan tüm tabloları bir <c>Table</c> listesi olark döndürür.
+    </summary>
+    <returns>Veritabanındaki tüm tablolar</returns>
+  </GetTables>
+  <AddRecord>
+    <summary>
+      İmlecin içerisinde bulunduğu tabloya kayıt eklemesini sağlar.
+    </summary>
+    <param name="columns">Kayıt içerisindeki sütunlar</param>
+    <param name="values">Kayıt içerisindeki değerler</param>
+    <exception cref="TableDidNotSetException"></exception>
+  </AddRecord>
+  <DeleteRecordByIndex>
+    <summary>
+      Kaydın tablodaki indeksine göre kaydı siler.
+    </summary>
+    <param name="index">Silinecek kaydın indeksi.</param>
+    <exception cref="TableDidNotSetException"></exception>
+    <exception cref="RecordDidNotFoundException"></exception>
+  </DeleteRecordByIndex>
+  <DeleteRecordByCondition>
+    <summary>
+      Parametreye girilen şartları sağlayan kayıtları siler.
+    </summary>
+    <param name="columns">Şart sütunları</param>
+    <param name="values">Şartın sağlanması için istenen değerler</param>
+    <exception cref="RecordDidNotFoundException"></exception>
+    <exception cref="TableDidNotSetException"></exception>
+  </DeleteRecordByCondition>
+  <FetchRecordByIndex>
+    <summary>
+      Belli bir indeksteki kaydı iki boyutlu <c>object</c> listesi olarak veritabanından çeker.
+      <code>
+        object[][] = {                              <br/>
+            { data.columns[0], data.values[0] },    <br/>
+            { data.columns[1], data.values[1] },    <br/>
+            .                                       <br/>
+            .                                       <br/>
+            .                                       <br/>
+            { data.columns[n], data.values[n] }     <br/>
+        }
+      </code>
+    </summary>
+    <param name="id"></param>
+    <returns></returns>
+  </FetchRecordByIndex>
+  <Commit>
+    <summary>
+      Veritabanını kaydeder
+    </summary>
+  </Commit>
+</docs>
