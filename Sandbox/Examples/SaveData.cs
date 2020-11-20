@@ -17,7 +17,6 @@ namespace Sandbox.Examples
                 "last_name"
             });
 
-            database.Commit();
             database.GoToTable("personalData");
             database.AddRecord( new string[] { "name", "last_name" },
                                 new string[] { "Ali Efe", "GÜR" });

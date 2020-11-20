@@ -1,6 +1,7 @@
 ﻿using alifeDB.Database.Core;
 using alifeDB.Database.Exceptions;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.IO;
 
 namespace alifeDB.Database
@@ -19,23 +20,36 @@ namespace alifeDB.Database
             table = null;
         }
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/Connect/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/Connect/*'/>
         public void Connect(string databasePath, string databaseName)
         {
             // Eğer dosya mevcutsa dosyayı okur ve metodu bitirir
             if (File.Exists(databasePath))
             {
-                database = SaveSystem.LoadDB(databasePath);
+                database = SaveSystem.LoadDb(databasePath);
                 return;
             }
 
             // Eğer dosya yoksa yeni dosya oluşturur
             database = new Core.Database(databasePath, databaseName);
             table = null;
-            Commit();
+            CommitAsync();
+        }
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/ConnectAsync/*'/>
+        public async void ConnectAsync(string databasePath, string databaseName)
+        {
+            if (File.Exists(databasePath))
+            {
+                database = await SaveSystem.LoadDbAsync(databasePath);
+                return;
+            }
+
+            database = new Core.Database(databasePath, databaseName);
+            table = null;
+            CommitAsync();
         }
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/GoToTable/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/GoToTable/*'/>
         public void GoToTable(string tableName)
         {
             // Veritabanında bulunan tüm tabloların isimleri ile parametrede girilen değeri karşılaştırır
@@ -51,7 +65,7 @@ namespace alifeDB.Database
             throw new TableDidNotFoundException("\"" + tableName + "\" isimli tablo bulunamadı!!!", database.dbName, this);
         }
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/CreateTable/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/CreateTable/*'/>
         public void CreateTable(string tableName, string[] columns)
         {
             // Eğer aynı adda birden fazla sütun adı varsa hata döndürür
@@ -71,7 +85,7 @@ namespace alifeDB.Database
                 table.AddColumn(columns[i]);
             database.tables.Add(table);
         }
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/CreateTableIfNotExists/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/CreateTableIfNotExists/*'/>
         public void CreateTableIfNotExists(string tableName, string[] columns)
         {
             // Eğer aynı adda tablo varsa metodu bitir
@@ -93,7 +107,7 @@ namespace alifeDB.Database
             database.tables.Add(table);
         }
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/GetTable/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/GetTable/*'/>
         public Table GetTable(string tableName)
         {
             foreach (Table table in database.GetTables())
@@ -105,10 +119,10 @@ namespace alifeDB.Database
             // Eğer o isimde tablo yoksa hata döndürür
             throw new AlifeDBException("Tablo bulunamadı!", database.GetString(), null);
         }
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/GetTables/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/GetTables/*'/>
         public List<Table> GetTables() => database.GetTables();
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/AddRecord/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/AddRecord/*'/>
         public void AddRecord(string[] columns, object[] values)
         {
             // Eğer girilen sütun sayısı ile değer sayısı aynı değilse hata döndürür
@@ -139,7 +153,7 @@ namespace alifeDB.Database
             table.AddRecord(record);
         }
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/DeleteRecordByIndex/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/DeleteRecordByIndex/*'/>
         public void DeleteRecord(int index)
         {
             // Eğer tablo seçilmemişse hata döndürür
@@ -149,7 +163,7 @@ namespace alifeDB.Database
             table.records.RemoveAt(index);
         }
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/DeleteRecordByCondition/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/DeleteRecordByCondition/*'/>
         public void DeleteRecord(string[] columns, object[] values)
         {
             // Eğer kullanıcı imleci bir tabloyla ilişkilendirmediyse hata döndür
@@ -179,25 +193,30 @@ namespace alifeDB.Database
                                 return;
                             }
         }
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/async/DeleteRecordByCondition/*'/>
+        public async Task DeleteRecordAsync(string[] columns, object[] values)
+        {
+            await Task.Run(() => DeleteRecord(columns, values));
+        }
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/FetchRecordByIndex/*'/>
-        public object[][] FetchRecord(int index)
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/FetchRecordByIndex/*'/>
+        public object[] FetchRecordByIndex(int index)
         {
             // Eğer imleç bir tablo göstermiyorsa hata döndür
             if (table == null)
                 throw new TableDidNotSetException("Herhangi bir kayıt çekmeden önce bir tablo seçmelisiniz!", this);
 
-            object[][] fetchedRecord = new object[table.records[index].values.Count][];
+            object[] fetchedRecord = new object[table.records[index].values.Count];
             for (int i = 0; i < table.records[index].values.Count; i++)
             {
-                fetchedRecord[i][0] = table.records[index].values[i].GetColumn().GetName();
-                fetchedRecord[i][1] = table.records[index].values[i].GetData();
+                fetchedRecord[i] = table.records[index].values[i].GetData();
             }
 
             return fetchedRecord;
         }
-
-        public object[] FetchData(int index, string[] columns)
+        
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/FetchDataByIndex'/>
+        public object[] FetchDataByIndex(int index, string[] columns)
         {
             // Tablo seçilmediyse hata döndürür
             if (table == null)
@@ -231,10 +250,15 @@ namespace alifeDB.Database
             return fetchedDatas;
         }
 
-        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/Commit/*'/>
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/Commit/*'/>
         public void Commit()
         {
-            SaveSystem.SaveDB(database);
+            SaveSystem.SaveDb(database);
+        }
+        /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/async/CommitAsync/*'/>
+        public async Task CommitAsync()
+        {
+            await Task.Run(() => SaveSystem.SaveDbAsync(database));
         }
     }
 }

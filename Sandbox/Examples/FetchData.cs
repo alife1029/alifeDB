@@ -21,14 +21,12 @@ namespace Sandbox.Examples
             object[][] fetchedDatas = new object[4][];
             for (int i = 0; i < 4; i++)
             {
-                fetchedDatas[i] = database.FetchData(
-                    i, new string[] { "id", "name", "last_name" }
-                );
+                fetchedDatas[i] = database.FetchRecordByIndex(i);
             }
 
-            for (int i = 0; i < fetchedDatas.Length; i++)
-                for (int j = 0; j < fetchedDatas[i].Length; j++)
-                    Console.WriteLine(fetchedDatas[i][j]);
+            foreach (object[] i in fetchedDatas)
+                foreach (object j in i)
+                    Console.WriteLine(j);
         }
     }
 }
