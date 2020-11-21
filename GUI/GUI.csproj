@@ -61,6 +61,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\TableListElement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\TableListElement.Designer.cs">
+      <DependentUpon>TableListElement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DatabaseScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DatabaseScreen.Designer.cs">
+      <DependentUpon>DatabaseScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\StartupScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,6 +81,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Components\TableListElement.resx">
+      <DependentUpon>TableListElement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DatabaseScreen.resx">
+      <DependentUpon>DatabaseScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\StartupScreen.resx">
       <DependentUpon>StartupScreen.cs</DependentUpon>
     </EmbeddedResource>
@@ -112,6 +130,10 @@
       <Project>{0c66595f-30e6-492f-97db-03ae693a8d9b}</Project>
       <Name>alifeDB</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Assets\table.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

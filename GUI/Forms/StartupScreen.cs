@@ -17,18 +17,18 @@ namespace GUI.Forms
             InitializeComponent();
         }
 
-        private void StartupScreen_Load(object sender, EventArgs e)
+        private void LoadDatabaseScreen(string dbPath, string dbName)
         {
-
+            DatabaseScreen databaseScreen = new DatabaseScreen(this, dbPath, dbName);
+            this.Hide();
+            databaseScreen.Show();
         }
 
         private void btnBrowse_OpenDb_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             if (fileDialog.ShowDialog() == DialogResult.OK)
-                tbDbPath_OpenDb.Text = fileDialog.FileName;
-
-            fileDialog.Dispose();
+                LoadDatabaseScreen(fileDialog.FileName, fileDialog.SafeFileName);
         }
 
         private void btnBrowse_CreateDb_Click(object sender, EventArgs e)
@@ -38,6 +38,28 @@ namespace GUI.Forms
                 tbDbPath_CreateDb.Text = folderBrowserDialog.SelectedPath;
 
             folderBrowserDialog.Dispose();
+        }
+
+        private void btnOpen_Click(object sender, EventArgs e)
+        {
+            string dbPath;
+            string dbName;
+
+            dbPath = tbDbPath_OpenDb.Text;
+
+            // Veritabanı adını bulmak için yapılan işlemler
+            // Son backslash olan karakterin indeksini alır
+            int lastBackSlashIndex = 0;
+            for(int i = 0; i < dbPath.Length; i++)
+            {
+                if (dbPath[i] == '\\' ||dbPath[i] == '/')
+                    lastBackSlashIndex = i + 1;
+            }
+            // Veritabanı adını bulur
+            dbName = dbPath.Substring(lastBackSlashIndex, dbPath.Length - lastBackSlashIndex)
+                            .Replace(".alfdb", null);
+
+            LoadDatabaseScreen(dbPath, dbName);
         }
     }
 }

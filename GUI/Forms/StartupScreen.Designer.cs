@@ -31,15 +31,15 @@ namespace GUI.Forms
         {
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tbDbPath_OpenDb = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.btnOpen = new System.Windows.Forms.Button();
             this.btnBrowse_OpenDb = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbDbPath_OpenDb = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tbDbName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tbDbPath_CreateDb = new System.Windows.Forms.TextBox();
-            this.btnOpen = new System.Windows.Forms.Button();
             this.btnCreate = new System.Windows.Forms.Button();
             this.btnBrowse_CreateDb = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -71,41 +71,20 @@ namespace GUI.Forms
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             // 
-            // label2
+            // btnOpen
             // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.label2.ForeColor = System.Drawing.SystemColors.Menu;
-            this.label2.Location = new System.Drawing.Point(467, 19);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(450, 38);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Yeni Bir AlfDB Veritabanı Oluştur";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // tbDbPath_OpenDb
-            // 
-            this.tbDbPath_OpenDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.tbDbPath_OpenDb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbDbPath_OpenDb.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.tbDbPath_OpenDb.ForeColor = System.Drawing.SystemColors.Info;
-            this.tbDbPath_OpenDb.Location = new System.Drawing.Point(35, 174);
-            this.tbDbPath_OpenDb.Name = "tbDbPath_OpenDb";
-            this.tbDbPath_OpenDb.Size = new System.Drawing.Size(394, 27);
-            this.tbDbPath_OpenDb.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.label3.ForeColor = System.Drawing.SystemColors.Menu;
-            this.label3.Location = new System.Drawing.Point(31, 150);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(168, 21);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Veritabanının Konumu:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnOpen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.btnOpen.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.btnOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOpen.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnOpen.ForeColor = System.Drawing.SystemColors.InactiveBorder;
+            this.btnOpen.Location = new System.Drawing.Point(151, 502);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(159, 38);
+            this.btnOpen.TabIndex = 4;
+            this.btnOpen.Text = "Aç";
+            this.btnOpen.UseVisualStyleBackColor = false;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
             // btnBrowse_OpenDb
             // 
@@ -121,6 +100,42 @@ namespace GUI.Forms
             this.btnBrowse_OpenDb.Text = "Göz At";
             this.btnBrowse_OpenDb.UseVisualStyleBackColor = false;
             this.btnBrowse_OpenDb.Click += new System.EventHandler(this.btnBrowse_OpenDb_Click);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.label3.ForeColor = System.Drawing.SystemColors.Menu;
+            this.label3.Location = new System.Drawing.Point(31, 150);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(168, 21);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Veritabanının Konumu:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tbDbPath_OpenDb
+            // 
+            this.tbDbPath_OpenDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.tbDbPath_OpenDb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbDbPath_OpenDb.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.tbDbPath_OpenDb.ForeColor = System.Drawing.SystemColors.Info;
+            this.tbDbPath_OpenDb.Location = new System.Drawing.Point(35, 174);
+            this.tbDbPath_OpenDb.Name = "tbDbPath_OpenDb";
+            this.tbDbPath_OpenDb.Size = new System.Drawing.Size(394, 27);
+            this.tbDbPath_OpenDb.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.label2.ForeColor = System.Drawing.SystemColors.Menu;
+            this.label2.Location = new System.Drawing.Point(467, 19);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(450, 38);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Yeni Bir AlfDB Veritabanı Oluştur";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label4
             // 
@@ -170,20 +185,6 @@ namespace GUI.Forms
             this.tbDbPath_CreateDb.Size = new System.Drawing.Size(423, 27);
             this.tbDbPath_CreateDb.TabIndex = 5;
             // 
-            // btnOpen
-            // 
-            this.btnOpen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.btnOpen.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.btnOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpen.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.btnOpen.ForeColor = System.Drawing.SystemColors.InactiveBorder;
-            this.btnOpen.Location = new System.Drawing.Point(151, 502);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(159, 38);
-            this.btnOpen.TabIndex = 4;
-            this.btnOpen.Text = "Aç";
-            this.btnOpen.UseVisualStyleBackColor = false;
-            // 
             // btnCreate
             // 
             this.btnCreate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
@@ -232,7 +233,6 @@ namespace GUI.Forms
             this.MaximizeBox = false;
             this.Name = "StartupScreen";
             this.Text = "AlifeDB Veritabanı";
-            this.Load += new System.EventHandler(this.StartupScreen_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
