@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace alifeDB.Database.Core
             {
                 formatter.Serialize(fs, database);
             }
+            GC.Collect();
         }
         // Veritabanını asenkron bir şekilde bloklanmadan kaydeder
         public static async void SaveDbAsync(Database database)
@@ -23,25 +25,34 @@ namespace alifeDB.Database.Core
             {
                 await Task.Run(() => formatter.Serialize(fs, database));
             }
+            GC.Collect();
         }
         
         // Veritabanını okur
         public static Database LoadDb(string path)
         {
+            Database db;
             BinaryFormatter formatter = new BinaryFormatter();
             using(FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                return (Database)formatter.Deserialize(fs);
+                db = (Database)formatter.Deserialize(fs);
             }
+
+            GC.Collect();
+            return db;
         }
         // Veritabanını asenkron bir şekilde bloklanmadan okur
         public static async Task<Database> LoadDbAsync(string path)
         {
+            Database db;
             BinaryFormatter formatter = new BinaryFormatter();
             using(FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                return await Task.Run(() => (Database)formatter.Deserialize(fs));
+                db = await Task.Run(() => (Database)formatter.Deserialize(fs));
             }
+
+            GC.Collect();
+            return db;
         }
     }
 }
