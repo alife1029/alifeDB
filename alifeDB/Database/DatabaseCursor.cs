@@ -33,10 +33,10 @@ namespace alifeDB.Database
             // Eğer dosya yoksa yeni dosya oluşturur
             database = new Core.Database(databasePath, databaseName);
             table = null;
-            CommitAsync();
+            Commit();
         }
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/ConnectAsync/*'/>
-        public async void ConnectAsync(string databasePath, string databaseName)
+        public async Task ConnectAsync(string databasePath, string databaseName)
         {
             if (File.Exists(databasePath))
             {
@@ -46,7 +46,7 @@ namespace alifeDB.Database
 
             database = new Core.Database(databasePath, databaseName);
             table = null;
-            CommitAsync();
+            await CommitAsync();
         }
 
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/GoToTable/*'/>
