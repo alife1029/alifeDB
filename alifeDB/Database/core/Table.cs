@@ -7,6 +7,35 @@ namespace alifeDB.Database.Core
     [Serializable]
     public class Table
     {
+        public int ColumnCount{ get { return columns.Count; } }
+        public List<Column> Columns { get { return columns; } }
+        public int RecordCount { get { return records.Count; } }
+        public List<object[]> Records 
+        { 
+            get
+            {
+                // Döndürülecek liste
+                List<object[]> returnVal = new List<object[]>();
+                
+                // Tüm kayıtları dolaşır
+                foreach(Record r in records)
+                {
+                    // Geçerli kayıttaki veriler
+                    object[] record = new object[ColumnCount];
+
+                    // Kayıttan sütunlarına göre sırasıyla verileri çekip diziye ekler
+                    for (int i = 0; i < ColumnCount; i++)
+                        record[i] = r.GetValue(columns[i].GetName());
+
+                    // Döndürülecek listeye geçerli kaydın array'i eklenir
+                    returnVal.Add(record);
+                }
+
+                // Liste döndürülür
+                return returnVal;
+            } 
+        }
+
         // Tablonun bulunduğu veritabanının adı
         private readonly string dbName;
         // Tablonun adı

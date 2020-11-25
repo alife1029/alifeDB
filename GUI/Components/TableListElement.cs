@@ -12,7 +12,9 @@ namespace GUI.Components
 {
     public partial class TableListElement : UserControl
     {
-        public override string Text { get => base.Text; set => base.Text = value; }
+        private bool mouseEntered;
+
+        public override string Text { get => base.Text; set { base.Text = value; lblName.Text = value; } }
 
         public TableListElement()
         {
@@ -29,6 +31,8 @@ namespace GUI.Components
             BackColor = Color.FromArgb(100, 100, 100);
             lblName.BackColor = Color.FromArgb(100, 100, 100);
             pbTable.BackColor = Color.FromArgb(100, 100, 100);
+            
+            mouseEntered = true;
         }
 
         private void TableListElement_MouseLeave(object sender, EventArgs e)
@@ -36,6 +40,8 @@ namespace GUI.Components
             BackColor = Color.FromArgb(70, 70, 70);
             lblName.BackColor = Color.FromArgb(70, 70, 70);
             pbTable.BackColor = Color.FromArgb(70, 70, 70);
+
+            mouseEntered = false;
         }
 
         private void TableListElement_MouseDown(object sender, MouseEventArgs e)
@@ -47,9 +53,25 @@ namespace GUI.Components
 
         private void TableListElement_MouseUp(object sender, MouseEventArgs e)
         {
-            BackColor = Color.FromArgb(70, 70, 70);
-            lblName.BackColor = Color.FromArgb(70, 70, 70);
-            pbTable.BackColor = Color.FromArgb(70, 70, 70);
+            if (!mouseEntered)
+            {
+                BackColor = Color.FromArgb(70, 70, 70);
+                lblName.BackColor = Color.FromArgb(70, 70, 70);
+                pbTable.BackColor = Color.FromArgb(70, 70, 70);
+            }
+            else
+            {
+                BackColor = Color.FromArgb(100, 100, 100);
+                lblName.BackColor = Color.FromArgb(100, 100, 100);
+                pbTable.BackColor = Color.FromArgb(100, 100, 100);
+            }
+        }
+
+        public void AddOnClickEvent(EventHandler e)
+        {
+            Click += e;
+            pbTable.Click += e;
+            lblName.Click += e;
         }
     }
 }

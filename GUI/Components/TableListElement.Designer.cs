@@ -39,9 +39,9 @@ namespace GUI.Components
             this.lblName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
             this.lblName.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.lblName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.lblName.Location = new System.Drawing.Point(77, 6);
+            this.lblName.Location = new System.Drawing.Point(68, 0);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(236, 64);
+            this.lblName.Size = new System.Drawing.Size(252, 76);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "TableListElement1";
             this.lblName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -53,10 +53,10 @@ namespace GUI.Components
             // pbTable
             // 
             this.pbTable.Image = global::GUI.Properties.Resources.table;
-            this.pbTable.Location = new System.Drawing.Point(6, 6);
+            this.pbTable.Location = new System.Drawing.Point(14, 14);
             this.pbTable.Name = "pbTable";
-            this.pbTable.Size = new System.Drawing.Size(64, 64);
-            this.pbTable.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pbTable.Size = new System.Drawing.Size(48, 48);
+            this.pbTable.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbTable.TabIndex = 0;
             this.pbTable.TabStop = false;
             this.pbTable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TableListElement_MouseDown);
@@ -71,7 +71,7 @@ namespace GUI.Components
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.pbTable);
-            this.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Cursor = System.Windows.Forms.Cursors.Default;
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
             this.Name = "TableListElement";
             this.Size = new System.Drawing.Size(320, 76);
@@ -82,7 +82,6 @@ namespace GUI.Components
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TableListElement_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.pbTable)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

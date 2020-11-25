@@ -20,7 +20,7 @@ namespace GUI.Forms
         private void LoadDatabaseScreen(string dbPath, string dbName)
         {
             DatabaseScreen databaseScreen = new DatabaseScreen(this, dbPath, dbName);
-            this.Hide();
+            Hide();
             databaseScreen.Show();
         }
 
@@ -28,7 +28,7 @@ namespace GUI.Forms
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             if (fileDialog.ShowDialog() == DialogResult.OK)
-                LoadDatabaseScreen(fileDialog.FileName, fileDialog.SafeFileName);
+                LoadDatabaseScreen(fileDialog.FileName, fileDialog.SafeFileName.Replace(".alfdb", null));
         }
 
         private void btnBrowse_CreateDb_Click(object sender, EventArgs e)
