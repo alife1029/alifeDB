@@ -7,14 +7,14 @@ namespace alifeDB.Database.Exceptions
     [Serializable]
     class TableAlreadyExistsException : Exception
     {
-        public string dbName;
+        public string dbString;
         public DatabaseCursor cursor;
         public string tableName;
 
         public TableAlreadyExistsException() { }
-        public TableAlreadyExistsException(string message, string dbName, string tableName, DatabaseCursor cursor) : base(message)
+        public TableAlreadyExistsException(string message, string dbString, string tableName, DatabaseCursor cursor) : base(message)
         {
-            this.dbName = dbName;
+            this.dbString = dbString;
             this.cursor = cursor;
             this.tableName = tableName;
         }

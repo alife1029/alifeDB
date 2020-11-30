@@ -7,14 +7,14 @@ namespace alifeDB.Database.Exceptions
     [Serializable]
     class RecordDidNotFoundException : Exception
     {
-        public string dbName;
+        public string dbString;
         public string tableName;
         public DatabaseCursor cursor;
 
         public RecordDidNotFoundException() { }
-        public RecordDidNotFoundException(string message, string dbName, string tableName, DatabaseCursor cursor) : base(message)
+        public RecordDidNotFoundException(string message, string dbString, string tableName, DatabaseCursor cursor) : base(message)
         {
-            this.dbName = dbName;
+            this.dbString = dbString;
             this.tableName = tableName;
             this.cursor = cursor;
         }

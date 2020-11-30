@@ -36,20 +36,20 @@ namespace alifeDB.Database.Core
             } 
         }
 
-        // Tablonun bulunduğu veritabanının adı
-        private readonly string dbName;
         // Tablonun adı
         private readonly string tableName;
+        // Tablonun bulunduğu veritabanının yolu
+        private readonly string parentDbString;
         // Tablo içerisindeki sütunlar
         internal List<Column> columns;
         // Tabloda bulunan kayıtlar
         internal List<Record> records;
 
         // Tablo constructor'ı parametresine tablonun adını alır
-        public Table(string tableName, string dbName)
+        public Table(string tableName, string parentDbString)
         {
             this.tableName = tableName;
-            this.dbName = dbName;
+            this.parentDbString = parentDbString;
             columns = new List<Column>();
             records = new List<Record>();
         }
@@ -67,7 +67,7 @@ namespace alifeDB.Database.Core
             // Eğer aynı isimde bir sütun varsa hata döndürür
             foreach (Column c in columns)
                 if (c.GetName() == columnName)
-                    throw new AlifeDBException("Sütun zaten mevcut!", dbName, tableName);
+                    throw new AlifeDBException("Sütun zaten mevcut!", parentDbString, tableName);
 
             columns.Add(new Column(columnName));
         }
@@ -92,7 +92,7 @@ namespace alifeDB.Database.Core
                     return record;
 
             // Kaydı bulamadıysa hata döndürür
-            throw new AlifeDBException("Kayıt bulunamadı!", dbName, tableName);
+            throw new AlifeDBException("Kayıt bulunamadı!", parentDbString, tableName);
         }
         public Record GetRecordByIndex(int index)
         {

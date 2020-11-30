@@ -9,7 +9,7 @@ namespace Sandbox.Examples
         {
             // Veritabanı imleci oluşturup bir veritabanına bağlanır
             DatabaseCursor database = new DatabaseCursor();
-            database.Connect(@"C:\Users\Ali Efe GÜR\Desktop\myDatabase.alfdb", "database");
+            database.Connect(@"C:\Users\Ali Efe GÜR\Desktop\myDatabase.alfdb");
 
             database.CreateTableIfNotExists("personalData", new string[] 
             {

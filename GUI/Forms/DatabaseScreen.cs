@@ -37,7 +37,7 @@ namespace GUI.Forms
 
         private void DatabaseScreen_Load(object sender, EventArgs e)
         {
-            database.Connect(dbPath, dbName);
+            database.Connect(dbPath);
             lblDbName.Text = dbName;
 
             // Tüm tabloları dolaşır

@@ -5,13 +5,13 @@ namespace alifeDB.Database.Exceptions
     [Serializable]
     public class TableDidNotFoundException : Exception
     {
-        public string dbName;
+        public string dbString;
         public DatabaseCursor cursor;
 
         public TableDidNotFoundException() { }
-        public TableDidNotFoundException(string message, string dbName, DatabaseCursor cursor) : base(message)
+        public TableDidNotFoundException(string message, string dbString, DatabaseCursor cursor) : base(message)
         {
-            this.dbName = dbName;
+            this.dbString = dbString;
             this.cursor = cursor;
         }
         public TableDidNotFoundException(string message, Exception inner) : base(message, inner) { }

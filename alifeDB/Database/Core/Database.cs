@@ -7,23 +7,18 @@ namespace alifeDB.Database.Core
     [Serializable]
     public class Database
     {
-        // Veritabanının adı
-        internal readonly string dbName;
         // Veritabanının kaydının dosya sistemindeki konumu
         internal string dbString;
         // Veritabanında bulunan tablolar
         internal List<Table> tables;
 
         // Veritabanı constructor'ı parametresine veritabanının dosya sistemindeki konumunu alır
-        public Database(string dbString, string dbName)
+        public Database(string dbString)
         {
             this.dbString = dbString;
-            this.dbName = dbName;
             tables = new List<Table>();
         }
 
-        // Veritananının adını döndürür
-        public string GetName() => dbName;
         // Veritabanının dosya sistemindeki konumunu döndürür
         public string GetString() => dbString;
 
@@ -34,7 +29,7 @@ namespace alifeDB.Database.Core
             foreach(Table t in tables)
             {
                 if (t.GetName() == table.GetName())
-                    throw new AlifeDBException("Tablo zaten mevcut!", dbName, null);
+                    throw new AlifeDBException("Tablo zaten mevcut!", dbString, null);
             }
             
             // Sorun yoksa yeni tabloyu listeye ekler
@@ -52,7 +47,7 @@ namespace alifeDB.Database.Core
                 }
 
             // Eğer o isme sahip bir tablo yoksa hata döndürür
-            throw new AlifeDBException("Tablo bulunamadı!", dbName, null);
+            throw new AlifeDBException("Tablo bulunamadı!", dbString, null);
         }
         // Parametreye girilen isimdeki tabloyu döndürür
         public Table GetTable(string tableName)
@@ -64,7 +59,7 @@ namespace alifeDB.Database.Core
             }
 
             // Eğer o isimde tablo yoksa hata döndürür
-            throw new AlifeDBException("Tablo bulunamadı!", dbName, null);
+            throw new AlifeDBException("Tablo bulunamadı!", dbString, null);
         }
         // Tablolar listesinin tamamını döndürür
         public List<Table> GetTables() => tables;

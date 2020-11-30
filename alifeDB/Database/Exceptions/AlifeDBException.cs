@@ -5,13 +5,13 @@ namespace alifeDB.Database.Exceptions
     [Serializable]
     public class AlifeDBException : Exception
     {
-        public string dbName;
+        public string dbString;
         public string tableName;
 
         public AlifeDBException() { }
-        public AlifeDBException(string message, string dbName, string tableName) : base(message)
+        public AlifeDBException(string message, string dbString, string tableName) : base(message)
         {
-            this.dbName = dbName;
+            this.dbString = dbString;
             this.tableName = tableName;
         }
         public AlifeDBException(string message, Exception inner) : base(message, inner) { }

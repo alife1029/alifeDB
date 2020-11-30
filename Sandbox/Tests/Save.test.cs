@@ -8,7 +8,7 @@ namespace Sandbox.Tests
         public Save()
         {
             DatabaseCursor db = new DatabaseCursor();
-            db.Connect(@"C:\Users\Ali Efe GÜR\Desktop\saveTestAsync.alfdb", "saveTest");
+            db.Connect(@"C:\Users\Ali Efe GÜR\Desktop\saveTestAsync.alfdb");
 
             DateTime start = DateTime.Now;
             DateTime start1 = DateTime.Now;

@@ -21,7 +21,7 @@ namespace alifeDB.Database
         }
 
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/Connect/*'/>
-        public void Connect(string databasePath, string databaseName)
+        public void Connect(string databasePath)
         {
             // Eğer dosya mevcutsa dosyayı okur ve metodu bitirir
             if (File.Exists(databasePath))
@@ -31,12 +31,12 @@ namespace alifeDB.Database
             }
 
             // Eğer dosya yoksa yeni dosya oluşturur
-            database = new Core.Database(databasePath, databaseName);
+            database = new Core.Database(databasePath);
             table = null;
             Commit();
         }
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/ConnectAsync/*'/>
-        public async Task ConnectAsync(string databasePath, string databaseName)
+        public async Task ConnectAsync(string databasePath)
         {
             if (File.Exists(databasePath))
             {
@@ -44,7 +44,7 @@ namespace alifeDB.Database
                 return;
             }
 
-            database = new Core.Database(databasePath, databaseName);
+            database = new Core.Database(databasePath);
             table = null;
             await CommitAsync();
         }
@@ -62,7 +62,7 @@ namespace alifeDB.Database
                 }
 
             // Eğer metod bitmemişse (tablo bulunamamışsa) hata döner
-            throw new TableDidNotFoundException("\"" + tableName + "\" isimli tablo bulunamadı!!!", database.dbName, this);
+            throw new TableDidNotFoundException("\"" + tableName + "\" isimli tablo bulunamadı!!!", database.dbString, this);
         }
 
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/CreateTable/*'/>
@@ -77,10 +77,10 @@ namespace alifeDB.Database
             // Eğer aynı adda tablo varsa hata döndür
             foreach (Table t in database.tables)
                 if (t.GetName().Equals(tableName))
-                    throw new TableAlreadyExistsException("Tablo zaten mevcut!", database.dbName, tableName, this);
+                    throw new TableAlreadyExistsException("Tablo zaten mevcut!", database.dbString, tableName, this);
 
             // Yeni tablo oluşturup veritabanına ekler
-            Table table = new Table(tableName, database.GetName());
+            Table table = new Table(tableName, database.dbString);
             for (int i = 0; i < columns.Length; i++)
                 table.AddColumn(columns[i]);
             database.tables.Add(table);
@@ -100,7 +100,7 @@ namespace alifeDB.Database
                         throw new AlifeDBArgumentException("Bir tablo içerisinde aynı isimde sütunlar olamaz!");
 
             // Yeni tablo oluşturup veritabanına ekler
-            Table table = new Table(tableName, database.GetName());
+            Table table = new Table(tableName, database.dbString);
             for (int i = 0; i < columns.Length; i++)
                 table.AddColumn(columns[i]);
 
@@ -244,7 +244,7 @@ namespace alifeDB.Database
                 // Belirtilen adda sütun yoksa hata döndür
                 if (!isColumnFound)
                     throw new ColumnDidNotFoundException("\"" + s + "\" isimli sütun bulunamadı!",
-                                                        database.GetName(), table.GetName(), s, this);
+                                                        database.GetString(), table.GetName(), s, this);
             }
 
             return fetchedDatas;
