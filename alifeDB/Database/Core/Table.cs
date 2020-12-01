@@ -8,7 +8,18 @@ namespace alifeDB.Database.Core
     public class Table
     {
         public int ColumnCount{ get { return columns.Count; } }
-        public List<Column> Columns { get { return columns; } }
+        public string[] ColumnNames
+        {
+            get
+            {
+                string[] returnVal = new string[columns.Count];
+
+                for (int i = 0; i < columns.Count; i++)
+                    returnVal[i] = columns[i].Name;
+
+                return returnVal; 
+            }
+        }
         public int RecordCount { get { return records.Count; } }
         public List<object[]> Records 
         { 
@@ -25,7 +36,7 @@ namespace alifeDB.Database.Core
 
                     // Kayıttan sütunlarına göre sırasıyla verileri çekip diziye ekler
                     for (int i = 0; i < ColumnCount; i++)
-                        record[i] = r.GetValue(columns[i].GetName());
+                        record[i] = r.GetValue(columns[i].Name);
 
                     // Döndürülecek listeye geçerli kaydın array'i eklenir
                     returnVal.Add(record);
@@ -35,9 +46,15 @@ namespace alifeDB.Database.Core
                 return returnVal;
             } 
         }
+        public string Name
+        {
+            get { return tableName; }
+            set { tableName = value; }
+        }
+        public string ParentDbString { get { return parentDbString; } }
 
         // Tablonun adı
-        private readonly string tableName;
+        private string tableName;
         // Tablonun bulunduğu veritabanının yolu
         private readonly string parentDbString;
         // Tablo içerisindeki sütunlar
@@ -55,7 +72,7 @@ namespace alifeDB.Database.Core
         }
 
         // Tabloya sütun ekler
-        internal void AddColumn(string columnName)
+        public void AddColumn(string columnName)
         {
             // Eğer sütun yoksa otomatik artan birincil anahtar ekler
             if (columns.Count == 0)
@@ -66,7 +83,7 @@ namespace alifeDB.Database.Core
 
             // Eğer aynı isimde bir sütun varsa hata döndürür
             foreach (Column c in columns)
-                if (c.GetName() == columnName)
+                if (c.Name == columnName)
                     throw new AlifeDBException("Sütun zaten mevcut!", parentDbString, tableName);
 
             columns.Add(new Column(columnName));
@@ -77,8 +94,8 @@ namespace alifeDB.Database.Core
         {
             // Yeni eklenecek kaydın birincil anahtarını ayarlar
             int lastIndexPrimaryKey;
-            lastIndexPrimaryKey = records.Count > 0 ? (int)records[records.Count - 1].values[0].GetData() : 0;
-            record.values[0].SetData(lastIndexPrimaryKey + 1);
+            lastIndexPrimaryKey = records.Count > 0 ? (int)records[records.Count - 1].values[0].Data : 0;
+            record.values[0].Data = lastIndexPrimaryKey + 1;
             
             records.Add(record);
         }
@@ -88,7 +105,7 @@ namespace alifeDB.Database.Core
         {
             // Tüm kayıtlara bakar
             foreach (Record record in records)
-                if ((int)record.values[0].GetData() == primaryKey)
+                if ((int)record.values[0].Data == primaryKey)
                     return record;
 
             // Kaydı bulamadıysa hata döndürür
@@ -98,8 +115,5 @@ namespace alifeDB.Database.Core
         {
             return records[index];
         }
-
-        // Tablonun adını döndürür
-        public string GetName() => tableName;
     }
 }

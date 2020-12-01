@@ -7,10 +7,29 @@ namespace alifeDB.Database.Core
     [Serializable]
     public class Database
     {
+        public string DbString
+        {
+            get { return dbString; }
+            set { dbString = value; }
+        }
+        public string[] TableNames
+        {
+            get
+            {
+                string[] returnVal = new string[tables.Count];
+
+                for (int i = 0; i < tables.Count; i++)
+                    returnVal[i] = tables[i].Name;
+
+                return returnVal;
+            }
+        }
+        public List<Table> Tables { get { return tables; } }
+
         // Veritabanının kaydının dosya sistemindeki konumu
-        internal string dbString;
+        private string dbString;
         // Veritabanında bulunan tablolar
-        internal List<Table> tables;
+        private readonly List<Table> tables;
 
         // Veritabanı constructor'ı parametresine veritabanının dosya sistemindeki konumunu alır
         public Database(string dbString)
@@ -19,16 +38,13 @@ namespace alifeDB.Database.Core
             tables = new List<Table>();
         }
 
-        // Veritabanının dosya sistemindeki konumunu döndürür
-        public string GetString() => dbString;
-
         // Tablo ekler
         public void AddTable(Table table)
         {
             // Eğer aynı isimde bir tablo varsa hata döndürür
             foreach(Table t in tables)
             {
-                if (t.GetName() == table.GetName())
+                if (t.Name == table.Name)
                     throw new AlifeDBException("Tablo zaten mevcut!", dbString, null);
             }
             
@@ -40,7 +56,7 @@ namespace alifeDB.Database.Core
         {
             // Tüm tabloların isimlerini karşılaştırır
             foreach (Table table in tables)
-                if (table.GetName() == tableName)
+                if (table.Name == tableName)
                 {
                     tables.Remove(table);
                     return;
@@ -54,14 +70,12 @@ namespace alifeDB.Database.Core
         {
             foreach(Table table in tables)
             {
-                if (table.GetName() == tableName)
+                if (table.Name == tableName)
                     return table;
             }
 
             // Eğer o isimde tablo yoksa hata döndürür
             throw new AlifeDBException("Tablo bulunamadı!", dbString, null);
         }
-        // Tablolar listesinin tamamını döndürür
-        public List<Table> GetTables() => tables;
     }
 }

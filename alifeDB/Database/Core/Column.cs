@@ -5,8 +5,15 @@ namespace alifeDB.Database.Core
     [Serializable]
     public struct Column
     {
+        public bool IsPrimaryKey { get { return primaryKey; } }
+        public string Name
+        {
+            get { return columnName; }
+            set { columnName = value; }
+        }
+
         private readonly bool primaryKey;
-        private readonly string columnName;
+        private string columnName;
 
         public Column(string columnName)
         {
@@ -16,10 +23,7 @@ namespace alifeDB.Database.Core
         public Column(string columnName, bool primaryKey)
         {
             this.columnName = columnName;
-            this.primaryKey = true;
+            this.primaryKey = primaryKey;
         }
-
-        public string GetName() => columnName;
-        public bool IsPrimaryKey() => primaryKey;
     }
 }

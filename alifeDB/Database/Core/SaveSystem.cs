@@ -12,7 +12,7 @@ namespace alifeDB.Database.Core
         public static void SaveDb(Database database)
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            using(FileStream fs = new FileStream(database.GetString(), FileMode.Create, FileAccess.Write))
+            using(FileStream fs = new FileStream(database.DbString, FileMode.Create, FileAccess.Write))
             {
                 SyncSerializeOptimizer optimizer = new SyncSerializeOptimizer();
                 formatter.Serialize(fs, database);
@@ -25,7 +25,7 @@ namespace alifeDB.Database.Core
         public static async void SaveDbAsync(Database database)
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            using(FileStream fs = new FileStream(database.GetString(), FileMode.Create, FileAccess.Write))
+            using(FileStream fs = new FileStream(database.DbString, FileMode.Create, FileAccess.Write))
             {
                 Task saveTask = Task.Run(() => formatter.Serialize(fs, database));
                 new AsyncSerializeOptimizer(saveTask);

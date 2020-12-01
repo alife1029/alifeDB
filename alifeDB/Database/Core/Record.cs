@@ -26,17 +26,17 @@ namespace alifeDB.Database.Core
             {
                 foreach (DataCell cell in this.values)
                 {
-                    if (cell.GetColumn().GetName() == columnNames[i])
+                    if (cell.Column.Name == columnNames[i])
                     {
                         // Eğer alan birincil anahtar değilse değeri ata
-                        if (!cell.GetColumn().IsPrimaryKey())
+                        if (!cell.Column.IsPrimaryKey)
                         {
-                            cell.SetData(values[i]);
+                            cell.Data = values[i];
                             break;
                         }
 
                         // Eğer alan birincil anahtarsa değeri null yap
-                        cell.SetData(null);
+                        cell.Data = null;
                         break;
                     }
                 }
@@ -45,14 +45,14 @@ namespace alifeDB.Database.Core
         public void SetValue(string column, object value)
         {
             foreach (DataCell cell in values)
-                if (cell.GetColumn().GetName() == column)
-                    cell.SetData(value);
+                if (cell.Column.Name == column)
+                    cell.Data = value;
         }
         public object GetValue(string columnName)
         {
             foreach (DataCell cell in values)
-                if (cell.GetColumn().GetName() == columnName)
-                    return cell.GetData();
+                if (cell.Column.Name == columnName)
+                    return cell.Data;
 
             return null;
         }

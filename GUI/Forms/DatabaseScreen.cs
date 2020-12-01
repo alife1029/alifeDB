@@ -44,7 +44,7 @@ namespace GUI.Forms
             foreach (Table t in database.GetTables())
             {
                 TableListElement newElement = new TableListElement();
-                newElement.Text = t.GetName();
+                newElement.Text = t.Name;
                 newElement.Margin = new Padding(0, 0, 0, 6);
                 newElement.AddOnClickEvent(TableListElement_Click);
 
@@ -105,7 +105,7 @@ namespace GUI.Forms
             // Tablonun sütunlarını DataGridView'a ekler
             dgvRecords.ColumnCount = table.ColumnCount;
             for (int index = 0; index < table.ColumnCount; index++)
-                dgvRecords.Columns[index].Name = table.Columns[index].GetName();
+                dgvRecords.Columns[index].Name = table.ColumnNames[index];
 
 
             // Tablodaki kayıtları DataGridView'a ekler

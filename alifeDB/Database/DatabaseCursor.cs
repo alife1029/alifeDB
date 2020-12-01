@@ -14,6 +14,13 @@ namespace alifeDB.Database
         // İmlecin bulunduğu tablo
         private Table table;
 
+        public string DatabasePath { get { return database.DbString; } }
+        public string TableName
+        {
+            get { return table.Name; }
+            set { GoToTable(value); }
+        }
+
         public DatabaseCursor()
         {
             database = null;
@@ -53,16 +60,16 @@ namespace alifeDB.Database
         public void GoToTable(string tableName)
         {
             // Veritabanında bulunan tüm tabloların isimleri ile parametrede girilen değeri karşılaştırır
-            foreach (Table t in database.GetTables())
+            foreach (Table t in database.Tables)
                 // Eğer aynı adda tablo bulunduysa o tabloyu table değişkenine atar ve metod bitirilir
-                if (t.GetName() == tableName)
+                if (t.Name == tableName)
                 {
                     table = t;
                     return;
                 }
 
             // Eğer metod bitmemişse (tablo bulunamamışsa) hata döner
-            throw new TableDidNotFoundException("\"" + tableName + "\" isimli tablo bulunamadı!!!", database.dbString, this);
+            throw new TableDidNotFoundException("\"" + tableName + "\" isimli tablo bulunamadı!!!", database.DbString, this);
         }
 
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/CreateTable/*'/>
@@ -75,22 +82,22 @@ namespace alifeDB.Database
                         throw new AlifeDBArgumentException("Bir tablo içerisinde aynı isimde sütunlar olamaz!");
 
             // Eğer aynı adda tablo varsa hata döndür
-            foreach (Table t in database.tables)
-                if (t.GetName().Equals(tableName))
-                    throw new TableAlreadyExistsException("Tablo zaten mevcut!", database.dbString, tableName, this);
+            foreach (Table t in database.Tables)
+                if (t.Name.Equals(tableName))
+                    throw new TableAlreadyExistsException("Tablo zaten mevcut!", database.DbString, tableName, this);
 
             // Yeni tablo oluşturup veritabanına ekler
-            Table table = new Table(tableName, database.dbString);
+            Table table = new Table(tableName, database.DbString);
             for (int i = 0; i < columns.Length; i++)
                 table.AddColumn(columns[i]);
-            database.tables.Add(table);
+            database.Tables.Add(table);
         }
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/CreateTableIfNotExists/*'/>
         public void CreateTableIfNotExists(string tableName, string[] columns)
         {
             // Eğer aynı adda tablo varsa metodu bitir
-            foreach (Table t in database.tables)
-                if (t.GetName() == tableName)
+            foreach (Table t in database.Tables)
+                if (t.Name == tableName)
                     return;
 
             // Eğer aynı adda birden fazla sütun adı varsa hata döndürür
@@ -100,27 +107,27 @@ namespace alifeDB.Database
                         throw new AlifeDBArgumentException("Bir tablo içerisinde aynı isimde sütunlar olamaz!");
 
             // Yeni tablo oluşturup veritabanına ekler
-            Table table = new Table(tableName, database.dbString);
+            Table table = new Table(tableName, database.DbString);
             for (int i = 0; i < columns.Length; i++)
                 table.AddColumn(columns[i]);
 
-            database.tables.Add(table);
+            database.Tables.Add(table);
         }
 
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/GetTable/*'/>
         public Table GetTable(string tableName)
         {
-            foreach (Table table in database.GetTables())
+            foreach (Table table in database.Tables)
             {
-                if (table.GetName() == tableName)
+                if (table.Name == tableName)
                     return table;
             }
 
             // Eğer o isimde tablo yoksa hata döndürür
-            throw new AlifeDBException("Tablo bulunamadı!", database.GetString(), null);
+            throw new AlifeDBException("Tablo bulunamadı!", database.DbString, null);
         }
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/GetTables/*'/>
-        public List<Table> GetTables() => database.GetTables();
+        public List<Table> GetTables() => database.Tables;
 
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/AddRecord/*'/>
         public void AddRecord(string[] columns, object[] values)
@@ -138,7 +145,7 @@ namespace alifeDB.Database
             {
                 bool isColumnExists = false;
                 foreach(Column c in table.columns)
-                    if (c.GetName() == s)
+                    if (c.Name == s)
                         isColumnExists = true;
 
                 if (!isColumnExists)
@@ -184,7 +191,7 @@ namespace alifeDB.Database
                     // Parametrede girilen tüm sütunları dolaşır
                     for (int i = 0; i < columns.Length; i++)
                         // Eğer istenilen şartın birini sağlamişsa
-                        if (c.GetColumn().GetName() == columns[i] && c.GetData() == values[i])
+                        if (c.Column.Name == columns[i] && c.Data == values[i])
                             // Eğer tüm koşullar sağlanmışsa
                             if (++providedConditionCount == columns.Length)
                             {
@@ -209,7 +216,7 @@ namespace alifeDB.Database
             object[] fetchedRecord = new object[table.records[index].values.Count];
             for (int i = 0; i < table.records[index].values.Count; i++)
             {
-                fetchedRecord[i] = table.records[index].values[i].GetData();
+                fetchedRecord[i] = table.records[index].values[i].Data;
             }
 
             return fetchedRecord;
@@ -235,7 +242,7 @@ namespace alifeDB.Database
                 // Tablodaki tüm sütunları dolaşır
                 foreach (Column c in table.columns)
                     // Eğer aynı adda sütun bulunduysa veriyi listeye ekler
-                    if (c.GetName() == s)
+                    if (c.Name == s)
                     {
                         fetchedDatas[counter++] = table.GetRecordByIndex(index).GetValue(s);
                         isColumnFound = true;
@@ -244,7 +251,7 @@ namespace alifeDB.Database
                 // Belirtilen adda sütun yoksa hata döndür
                 if (!isColumnFound)
                     throw new ColumnDidNotFoundException("\"" + s + "\" isimli sütun bulunamadı!",
-                                                        database.GetString(), table.GetName(), s, this);
+                                                        database.DbString, table.Name, s, this);
             }
 
             return fetchedDatas;
