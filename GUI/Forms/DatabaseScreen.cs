@@ -18,7 +18,6 @@ namespace GUI.Forms
         private StartupScreen startupScreen;
         private DatabaseCursor database;
         private readonly string dbPath;
-        private readonly string dbName;
 
 
         public DatabaseScreen()
@@ -26,11 +25,10 @@ namespace GUI.Forms
             database = new DatabaseCursor();
             InitializeComponent();
         }
-        public DatabaseScreen(StartupScreen startupScreen, string dbPath, string dbName)
+        public DatabaseScreen(StartupScreen startupScreen, string dbPath)
         {
             this.startupScreen = startupScreen;
             this.dbPath = dbPath;
-            this.dbName = dbName;
             database = new DatabaseCursor();
             InitializeComponent();
         }
@@ -38,7 +36,25 @@ namespace GUI.Forms
         private void DatabaseScreen_Load(object sender, EventArgs e)
         {
             database.Connect(dbPath);
+
+
+
+            // Veritabanı adını bulmak için yapılan işlemler            
+            string dbName;
+            // Son backslash olan karakterin indeksini alır
+            int lastBackSlashIndex = 0;
+            for (int i = 0; i < dbPath.Length; i++)
+            {
+                if (dbPath[i] == '\\' || dbPath[i] == '/')
+                    lastBackSlashIndex = i + 1;
+            }
+            // Veritabanı adını bulur
+            dbName = dbPath.Substring(lastBackSlashIndex, dbPath.Length - lastBackSlashIndex)
+                            .Replace(".alfdb", null);
             lblDbName.Text = dbName;
+
+
+
 
             // Tüm tabloları dolaşır
             foreach (Table t in database.GetTables())
@@ -127,6 +143,7 @@ namespace GUI.Forms
                 }
                 ++i;
             }
+            dgvRecords.Rows.Add(new DataGridViewRow());
         }
 
         private void DatabaseScreen_Dispose(object sender, EventArgs e)

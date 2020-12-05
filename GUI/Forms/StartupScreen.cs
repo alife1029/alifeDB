@@ -17,9 +17,9 @@ namespace GUI.Forms
             InitializeComponent();
         }
 
-        private void LoadDatabaseScreen(string dbPath, string dbName)
+        private void LoadDatabaseScreen(string dbPath)
         {
-            DatabaseScreen databaseScreen = new DatabaseScreen(this, dbPath, dbName);
+            DatabaseScreen databaseScreen = new DatabaseScreen(this, dbPath);
             Hide();
             databaseScreen.Show();
         }
@@ -28,7 +28,7 @@ namespace GUI.Forms
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             if (fileDialog.ShowDialog() == DialogResult.OK)
-                LoadDatabaseScreen(fileDialog.FileName, fileDialog.SafeFileName.Replace(".alfdb", null));
+                LoadDatabaseScreen(fileDialog.FileName);
         }
 
         private void btnBrowse_CreateDb_Click(object sender, EventArgs e)
@@ -42,24 +42,17 @@ namespace GUI.Forms
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-            string dbPath;
-            string dbName;
+            LoadDatabaseScreen(tbDbPath_OpenDb.Text);
+        }
 
-            dbPath = tbDbPath_OpenDb.Text;
-
-            // Veritabanı adını bulmak için yapılan işlemler
-            // Son backslash olan karakterin indeksini alır
-            int lastBackSlashIndex = 0;
-            for(int i = 0; i < dbPath.Length; i++)
+        private void btnCreate_Click(object sender, EventArgs e)
+        {
+            if (tbDbName.Text.Substring(tbDbName.Text.Length - 6) != ".alfdb")
             {
-                if (dbPath[i] == '\\' ||dbPath[i] == '/')
-                    lastBackSlashIndex = i + 1;
+                tbDbName.Text += ".alfdb";
             }
-            // Veritabanı adını bulur
-            dbName = dbPath.Substring(lastBackSlashIndex, dbPath.Length - lastBackSlashIndex)
-                            .Replace(".alfdb", null);
 
-            LoadDatabaseScreen(dbPath, dbName);
+            LoadDatabaseScreen(tbDbPath_CreateDb.Text + "\\" + tbDbName);
         }
     }
 }
