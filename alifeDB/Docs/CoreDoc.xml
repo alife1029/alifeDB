@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <database>
+    <prop name="DbString">
+      <summary>
+        Veritabanının bilgisayarda kayıtlı olduğu dosya konumu.
+      </summary>
+    </prop>
+    <prop name="TableNames">
+      <summary>
+        Veritabanında bulunan tabloların isimlerinin listesi
+      </summary>
+    </prop>
+    <prop name="Tables">
+      <summary>
+        Veritabanında bulunan tabloların <c>alifeDB.Database.Core.Table</c> türünden listesi
+      </summary>
+    </prop>
+  </database>
+</docs>

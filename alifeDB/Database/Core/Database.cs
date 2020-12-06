@@ -7,11 +7,13 @@ namespace alifeDB.Database.Core
     [Serializable]
     public class Database
     {
+        /// <include file='Docs/CoreDoc.xml' path='docs/database/prop[@name="DbString"]/*'/>
         public string DbString
         {
             get { return dbString; }
             set { dbString = value; }
         }
+        /// <include file='Docs/CoreDoc.xml' path='docs/database/prop[@name="TableNames"]/*'/>
         public string[] TableNames
         {
             get
@@ -24,6 +26,7 @@ namespace alifeDB.Database.Core
                 return returnVal;
             }
         }
+        /// <include file='Docs/CoreDoc.xml' path='docs/database/prop[@name="Tables"]/*'/>
         public List<Table> Tables { get { return tables; } }
 
         // Veritabanının kaydının dosya sistemindeki konumu
