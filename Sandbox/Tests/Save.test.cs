@@ -13,7 +13,9 @@ namespace Sandbox.Tests
             DateTime start = DateTime.Now;
             DateTime start1 = DateTime.Now;
 
-            db.CreateTable("students", new string[] { "id", "name", "last_name", "class", "mark" });
+            db.CreateTable("students", 
+                            true, 
+                            new string[] { "id", "name", "last_name", "class", "mark" });
             db.GoToTable("students");
 
             for (int i = 0; i < 10; i++)

@@ -73,7 +73,7 @@ namespace alifeDB.Database
         }
 
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/CreateTable/*'/>
-        public void CreateTable(string tableName, string[] columns)
+        public void CreateTable(string tableName, bool primaryKey, string[] columns)
         {
             // Eğer aynı adda birden fazla sütun adı varsa hata döndürür
             for (int i = 0; i < columns.Length; i++)
@@ -87,13 +87,13 @@ namespace alifeDB.Database
                     throw new TableAlreadyExistsException("Tablo zaten mevcut!", database.DbString, tableName, this);
 
             // Yeni tablo oluşturup veritabanına ekler
-            Table table = new Table(tableName, database.DbString);
+            Table table = new Table(tableName, database.DbString, primaryKey);
             for (int i = 0; i < columns.Length; i++)
                 table.AddColumn(columns[i]);
             database.Tables.Add(table);
         }
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/CreateTableIfNotExists/*'/>
-        public void CreateTableIfNotExists(string tableName, string[] columns)
+        public void CreateTableIfNotExists(string tableName, bool primaryKey, string[] columns)
         {
             // Eğer aynı adda tablo varsa metodu bitir
             foreach (Table t in database.Tables)
@@ -107,7 +107,7 @@ namespace alifeDB.Database
                         throw new AlifeDBArgumentException("Bir tablo içerisinde aynı isimde sütunlar olamaz!");
 
             // Yeni tablo oluşturup veritabanına ekler
-            Table table = new Table(tableName, database.DbString);
+            Table table = new Table(tableName, database.DbString, primaryKey);
             for (int i = 0; i < columns.Length; i++)
                 table.AddColumn(columns[i]);
 

@@ -11,52 +11,52 @@ namespace Sandbox.Examples
             DatabaseCursor database = new DatabaseCursor();
             database.Connect(@"C:\Users\Ali Efe GÜR\Desktop\myDatabase.alfdb");
 
-            database.CreateTableIfNotExists("personalData", new string[] 
+            database.CreateTableIfNotExists("personalData", true, new string[] 
             {
                 "id",
                 "name",
                 "last_name"
             });
-            database.CreateTableIfNotExists("students", new string[]
+            database.CreateTableIfNotExists("students", false, new string[]
             {
                 "no",
                 "class",
                 "school",
                 "markAverage"
             });
-            database.CreateTableIfNotExists("teachers", new string[] 
+            database.CreateTableIfNotExists("teachers", false, new string[] 
             {
                 "name",
                 "last_name",
                 "branch"
             });
-            database.CreateTableIfNotExists("workers", new string[]
+            database.CreateTableIfNotExists("workers", false, new string[]
             {
                 "name",
                 "last_name",
                 "department",
                 "salary"
             });
-            database.CreateTableIfNotExists("products", new string[]
+            database.CreateTableIfNotExists("products", false, new string[]
             {
                 "model",
                 "brand",
                 "price",
                 "rate"
             });
-            database.CreateTableIfNotExists("films", new string[]
+            database.CreateTableIfNotExists("films", false, new string[]
             {
                 "name",
                 "director",
                 "imdb"
             });
-            database.CreateTableIfNotExists("games", new string[]
+            database.CreateTableIfNotExists("games", false, new string[]
             {
                 "name",
                 "platform",
                 "type"
             });
-            database.CreateTableIfNotExists("programmingLanguages", new string[]
+            database.CreateTableIfNotExists("programmingLanguages", false, new string[]
             {
                 "name",
                 "compilable",

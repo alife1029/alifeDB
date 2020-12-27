@@ -7,6 +7,7 @@ namespace alifeDB.Database.Core
     [Serializable]
     public class Table
     {
+        public bool IsPrimaryKeyExists { get { return isPrimaryKeyExists; } }
         public int ColumnCount{ get { return columns.Count; } }
         public string[] ColumnNames
         {
@@ -61,26 +62,26 @@ namespace alifeDB.Database.Core
         internal List<Column> columns;
         // Tabloda bulunan kayıtlar
         internal List<Record> records;
+        // Tabloda birincil anahtar var mı?
+        private bool isPrimaryKeyExists;
 
         // Tablo constructor'ı parametresine tablonun adını alır
-        public Table(string tableName, string parentDbString)
+        public Table(string tableName, string parentDbString, bool isPrimaryKeyExists)
         {
             this.tableName = tableName;
             this.parentDbString = parentDbString;
+            this.isPrimaryKeyExists = isPrimaryKeyExists;
             columns = new List<Column>();
             records = new List<Record>();
+
+            // Eğer tabloda birincil anahtar olacaksa sütunların ilk indeksini id isimli bir birincil anahtar olarak ayarlar
+            if (isPrimaryKeyExists)
+                columns[0] = new Column("id", true);
         }
 
         // Tabloya sütun ekler
         public void AddColumn(string columnName)
         {
-            // Eğer sütun yoksa otomatik artan birincil anahtar ekler
-            if (columns.Count == 0)
-            {
-                columns.Add(new Column(columnName, true));
-                return;
-            }
-
             // Eğer aynı isimde bir sütun varsa hata döndürür
             foreach (Column c in columns)
                 if (c.Name == columnName)
@@ -92,10 +93,12 @@ namespace alifeDB.Database.Core
         // Tabloya yeni kayıt ekler
         public void AddRecord(Record record)
         {
-            // Yeni eklenecek kaydın birincil anahtarını ayarlar
-            int lastIndexPrimaryKey;
-            lastIndexPrimaryKey = records.Count > 0 ? (int)records[records.Count - 1].values[0].Data : 0;
-            record.values[0].Data = lastIndexPrimaryKey + 1;
+            if (IsPrimaryKeyExists) {
+                // Yeni eklenecek kaydın birincil anahtarını ayarlar
+                int lastIndexPrimaryKey;
+                lastIndexPrimaryKey = records.Count > 0 ? (int)records[records.Count - 1].values[0].Data : 0;
+                record.values[0].Data = lastIndexPrimaryKey + 1;
+            }
             
             records.Add(record);
         }
@@ -103,6 +106,10 @@ namespace alifeDB.Database.Core
         // Tablodan birincil anahtarına göre kayıt çeker
         public Record GetRecordByPrimaryKey(int primaryKey)
         {
+            // Eğer tabloda birincil anahtar yoksa hata döndürür
+            if (!IsPrimaryKeyExists)
+                throw new AlifeDBException("Bu tabloda birincil anahtar bulunmamakta!", parentDbString, tableName);
+
             // Tüm kayıtlara bakar
             foreach (Record record in records)
                 if ((int)record.values[0].Data == primaryKey)
