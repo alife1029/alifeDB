@@ -3,6 +3,18 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# alifeDB Database Files
+*.alfdb
+
+# Visual Studio Project And Solution Files
+*.sln
+*.csproj
+*.vcxproj
+*.filters
+
+# GNU Makefiles
+*Makefile
+
 # User-specific files
 *.rsuser
 *.suo
@@ -24,6 +36,7 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+[Bb]in-[Ii]nt/
 [Oo]bj/
 [Ll]og/
 
