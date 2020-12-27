@@ -20,10 +20,10 @@ project "alifeDB"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
-		"%{prj.name}/**.cs",
-		"%{prj.name}/**.xml",
-		"%{prj.name}/**.resx",
-		"%{prj.name}/**.config"
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**"
 	}
 
 	postbuildcommands {
@@ -52,11 +52,11 @@ project "GUI"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
-		"%{prj.name}/**.cs",
-		"%{prj.name}/**.xml",
-		"%{prj.name}/**.png",
-		"%{prj.name}/**.resx",
-		"%{prj.name}/**.config"
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**"
 	}
 
 	filter "configurations:Debug"
@@ -77,10 +77,10 @@ project "Sandbox"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
-		"%{prj.name}/**.cs",
-		"%{prj.name}/**.xml",
-		"%{prj.name}/**.resx",
-		"%{prj.name}/**.config"
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**",
+		"%{prj.name}/**.**"
 	}
 
 	filter "configurations:Debug"

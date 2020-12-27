@@ -17,7 +17,7 @@ echo.
 set /p ide=Which Build System will you use: 
 echo.
 
-call vendor\bin\premake\premake5.exe %ide%
+call vendor\premake\premake5.exe %ide%
 
 echo.
 pause
