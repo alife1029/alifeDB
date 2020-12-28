@@ -1,84 +1,80 @@
 ﻿using alifeDB.Database.Exceptions;
-using System;
 using System.Collections.Generic;
+using ProtoBuf;
 
 namespace alifeDB.Database.Core
 {
-    [Serializable]
+    [ProtoContract]
     public class Database
     {
         /// <include file='Docs/CoreDoc.xml' path='docs/database/prop[@name="DbString"]/*'/>
-        public string DbString
-        {
-            get { return dbString; }
-            set { dbString = value; }
-        }
+        [ProtoMember(1)]
+        public string DbString { get; set; }
+
+        /// <include file='Docs/CoreDoc.xml' path='docs/database/prop[@name="Tables"]/*'/>
+        [ProtoMember(2)]
+        public List<Table> Tables { get; set; }
+
+
         /// <include file='Docs/CoreDoc.xml' path='docs/database/prop[@name="TableNames"]/*'/>
         public string[] TableNames
         {
             get
             {
-                string[] returnVal = new string[tables.Count];
+                string[] returnVal = new string[Tables.Count];
 
-                for (int i = 0; i < tables.Count; i++)
-                    returnVal[i] = tables[i].Name;
+                for (int i = 0; i < Tables.Count; i++)
+                    returnVal[i] = Tables[i].Name;
 
                 return returnVal;
             }
         }
-        /// <include file='Docs/CoreDoc.xml' path='docs/database/prop[@name="Tables"]/*'/>
-        public List<Table> Tables { get { return tables; } }
-
-        // Veritabanının kaydının dosya sistemindeki konumu
-        private string dbString;
-        // Veritabanında bulunan tablolar
-        private readonly List<Table> tables;
 
         // Veritabanı constructor'ı parametresine veritabanının dosya sistemindeki konumunu alır
         public Database(string dbString)
         {
-            this.dbString = dbString;
-            tables = new List<Table>();
+            DbString = dbString;
+            Tables = new List<Table>();
         }
 
         // Tablo ekler
         public void AddTable(Table table)
         {
             // Eğer aynı isimde bir tablo varsa hata döndürür
-            foreach(Table t in tables)
+            foreach(Table t in Tables)
             {
                 if (t.Name == table.Name)
-                    throw new AlifeDBException("Tablo zaten mevcut!", dbString, null);
+                    throw new AlifeDBException("Tablo zaten mevcut!", DbString, null);
             }
             
             // Sorun yoksa yeni tabloyu listeye ekler
-            tables.Add(table);
+            Tables.Add(table);
         }
         // Veritabanından tablo siler
         public void DeleteTable(string tableName)
         {
             // Tüm tabloların isimlerini karşılaştırır
-            foreach (Table table in tables)
+            foreach (Table table in Tables)
                 if (table.Name == tableName)
                 {
-                    tables.Remove(table);
+                    Tables.Remove(table);
                     return;
                 }
 
             // Eğer o isme sahip bir tablo yoksa hata döndürür
-            throw new AlifeDBException("Tablo bulunamadı!", dbString, null);
+            throw new AlifeDBException("Tablo bulunamadı!", DbString, null);
         }
         // Parametreye girilen isimdeki tabloyu döndürür
         public Table GetTable(string tableName)
         {
-            foreach(Table table in tables)
+            foreach(Table table in Tables)
             {
                 if (table.Name == tableName)
                     return table;
             }
 
             // Eğer o isimde tablo yoksa hata döndürür
-            throw new AlifeDBException("Tablo bulunamadı!", dbString, null);
+            throw new AlifeDBException("Tablo bulunamadı!", DbString, null);
         }
     }
 }

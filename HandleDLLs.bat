@@ -14,16 +14,19 @@ xcopy %~dp0bin\Merged %~dp0%1\ /y
 echo DLL Replaced
 echo.
 
-echo Deleting Unnecessary Files
-rmdir /s /q %~dp0bin\Merged
-rmdir /s /q %~dp0%1\vendor
-del %~dp0%1\protobuf.dll /s /f /q
-echo.
-
 echo DLL Copying To Sandbox and GUI Apps
 xcopy %~dp0%1\alifeDB.dll* %~dp0%1\..\Sandbox\ /y /d
 xcopy %~dp0%1\alifeDB.dll* %~dp0\%1\..\GUI\ /y /d
 echo.
 
-pause
+echo Deleting Unnecessary Files and Folders
+rmdir /s /q %~dp0bin\Merged
+rmdir /s /q %~dp0%1\vendor
+rmdir /s /q %~dp0%1\..\GUI\vendor
+rmdir /s /q %~dp0%1\..\Sandbox\vendor
+del %~dp0%1\protobuf.dll /s /f /q
+del %~dp0%1\..\GUI\protobuf.dll /s /f /q
+del %~dp0%1\..\Sandbox\protobuf.dll /s /f /q
+echo.
 
+pause

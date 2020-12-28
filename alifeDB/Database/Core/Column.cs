@@ -1,29 +1,24 @@
-﻿using System;
+﻿using ProtoBuf;
 
 namespace alifeDB.Database.Core
 {
-    [Serializable]
+    [ProtoContract]
     public struct Column
     {
-        public bool IsPrimaryKey { get { return primaryKey; } }
-        public string Name
-        {
-            get { return columnName; }
-            set { columnName = value; }
-        }
-
-        private readonly bool primaryKey;
-        private string columnName;
+        [ProtoMember(1)]
+        public bool IsPrimaryKey { get; set; }
+        [ProtoMember(2)]
+        public string Name { get; set; }
 
         public Column(string columnName)
         {
-            this.columnName = columnName;
-            this.primaryKey = false;
+            Name = columnName;
+            IsPrimaryKey = false;
         }
         public Column(string columnName, bool primaryKey)
         {
-            this.columnName = columnName;
-            this.primaryKey = primaryKey;
+            Name = columnName;
+            IsPrimaryKey = primaryKey;
         }
     }
 }

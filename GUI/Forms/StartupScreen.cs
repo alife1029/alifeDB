@@ -47,12 +47,21 @@ namespace GUI.Forms
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            if (tbDbName.Text.Substring(tbDbName.Text.Length - 6) != ".alfdb")
-            {
-                tbDbName.Text += ".alfdb";
+            try {
+                if (tbDbName.Text.Substring(tbDbName.Text.Length - 6) != ".alfdb")
+                    tbDbName.Text += ".alfdb";
             }
 
-            LoadDatabaseScreen(tbDbPath_CreateDb.Text + "\\" + tbDbName);
+            // Hata alındıysa, veritabanı adı kısmına girilen isim 6 karakterden kısadır
+            // Haliyle veritabanı adının sonunda .alfdb yoktur
+            catch (Exception) { 
+                tbDbName.Text += ".alfdb"; 
+            }
+
+            if (tbDbPath_CreateDb.Text[tbDbPath_CreateDb.Text.Length - 1] != '\\')
+                LoadDatabaseScreen(tbDbPath_CreateDb.Text + "\\" + tbDbName.Text);
+            else
+                LoadDatabaseScreen(tbDbPath_CreateDb.Text + tbDbName.Text);
         }
     }
 }

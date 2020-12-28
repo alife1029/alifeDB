@@ -144,7 +144,7 @@ namespace alifeDB.Database
             foreach(string s in columns)
             {
                 bool isColumnExists = false;
-                foreach(Column c in table.columns)
+                foreach(Column c in table.Columns)
                     if (c.Name == s)
                         isColumnExists = true;
 
@@ -167,7 +167,7 @@ namespace alifeDB.Database
             if (table == null)
                 throw new TableDidNotSetException("Herhangi bir kayıt silmeden önce bir tablo seçmek zorundasınız!", this);
 
-            table.records.RemoveAt(index);
+            table.Records.RemoveAt(index);
         }
 
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/DeleteRecordByCondition/*'/>
@@ -185,9 +185,9 @@ namespace alifeDB.Database
             int providedConditionCount = 0;
 
             // Tablo içindeki tüm kayıtları dolaşır
-            foreach (Record r in table.records)
+            foreach (Record r in table.Records)
                 // Kayıt içindeki tüm veri hücrelerini dolaşır
-                foreach (DataCell c in r.values)
+                foreach (DataCell c in r.Values)
                     // Parametrede girilen tüm sütunları dolaşır
                     for (int i = 0; i < columns.Length; i++)
                         // Eğer istenilen şartın birini sağlamişsa
@@ -196,7 +196,7 @@ namespace alifeDB.Database
                             if (++providedConditionCount == columns.Length)
                             {
                                 // Şu an üzerinde durduğumuz kaydı siler ve metod sonlanır
-                                table.records.Remove(r);
+                                table.Records.Remove(r);
                                 return;
                             }
         }
@@ -213,10 +213,10 @@ namespace alifeDB.Database
             if (table == null)
                 throw new TableDidNotSetException("Herhangi bir kayıt çekmeden önce bir tablo seçmelisiniz!", this);
 
-            object[] fetchedRecord = new object[table.records[index].values.Count];
-            for (int i = 0; i < table.records[index].values.Count; i++)
+            object[] fetchedRecord = new object[table.Records[index].Values.Count];
+            for (int i = 0; i < table.Records[index].Values.Count; i++)
             {
-                fetchedRecord[i] = table.records[index].values[i].Data;
+                fetchedRecord[i] = table.Records[index].Values[i].Data;
             }
 
             return fetchedRecord;
@@ -240,7 +240,7 @@ namespace alifeDB.Database
                 bool isColumnFound = false;
                 
                 // Tablodaki tüm sütunları dolaşır
-                foreach (Column c in table.columns)
+                foreach (Column c in table.Columns)
                     // Eğer aynı adda sütun bulunduysa veriyi listeye ekler
                     if (c.Name == s)
                     {

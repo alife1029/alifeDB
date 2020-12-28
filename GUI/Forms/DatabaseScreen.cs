@@ -133,7 +133,7 @@ namespace GUI.Forms
             dgvRecords.RowCount = table.RecordCount;
             // Tüm kayıtları dolaşır
             int i = 0;
-            foreach (object[] record in table.Records)
+            foreach (object[] record in table.TableRecords)
             {
                 int j = 0;
                 foreach (object cell in record)

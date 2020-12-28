@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using alifeDB.Database.Core.SerializeOptimizers;
+using ProtoBuf;
 
 namespace alifeDB.Database.Core
 {
@@ -11,11 +11,10 @@ namespace alifeDB.Database.Core
         // Vertibanını kaydeder
         public static void SaveDb(Database database)
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            using(FileStream fs = new FileStream(database.DbString, FileMode.Create, FileAccess.Write))
+            using (FileStream fs = File.Create(database.DbString))
             {
                 SyncSerializeOptimizer optimizer = new SyncSerializeOptimizer();
-                formatter.Serialize(fs, database);
+                Serializer.Serialize(fs, database);
                 optimizer.Stop();
                 optimizer = null;
             }
@@ -24,10 +23,9 @@ namespace alifeDB.Database.Core
         // Veritabanını asenkron bir şekilde bloklanmadan kaydeder
         public static async void SaveDbAsync(Database database)
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            using(FileStream fs = new FileStream(database.DbString, FileMode.Create, FileAccess.Write))
+            using(FileStream fs = File.Create(database.DbString))
             {
-                Task saveTask = Task.Run(() => formatter.Serialize(fs, database));
+                Task saveTask = Task.Run(() => Serializer.Serialize(fs, database));
                 new AsyncSerializeOptimizer(saveTask);
                 await saveTask;
             }
@@ -38,11 +36,10 @@ namespace alifeDB.Database.Core
         public static Database LoadDb(string path)
         {
             Database db = null;
-            BinaryFormatter formatter = new BinaryFormatter();
             using(FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 SyncSerializeOptimizer optimizer = new SyncSerializeOptimizer();
-                db = (Database)formatter.Deserialize(fs);
+                db = Serializer.Deserialize<Database>(fs);
                 optimizer.Stop();
                 optimizer = null;
             }
@@ -54,10 +51,9 @@ namespace alifeDB.Database.Core
         public static async Task<Database> LoadDbAsync(string path)
         {
             Task<Database> dbTask;
-            BinaryFormatter formatter = new BinaryFormatter();
             using(FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                dbTask = Task.Run(() => (Database)formatter.Deserialize(fs));
+                dbTask = Task.Run(() => Serializer.Deserialize<Database>(fs));
                 new AsyncSerializeOptimizer(dbTask);
                 await dbTask;
             }

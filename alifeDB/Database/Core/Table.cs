@@ -1,28 +1,56 @@
 ﻿using alifeDB.Database.Exceptions;
-using System;
 using System.Collections.Generic;
+using ProtoBuf;
 
 namespace alifeDB.Database.Core
 {
-    [Serializable]
+    [ProtoContract]
+    [ProtoInclude(1)]
     public class Table
     {
-        public bool IsPrimaryKeyExists { get { return isPrimaryKeyExists; } }
-        public int ColumnCount{ get { return columns.Count; } }
+        // Tablonun adı
+        [ProtoMember(1)]
+        public string Name { get; set; }
+
+        // Tabloda birincil anahtar var mı
+        [ProtoMember(2)]
+        internal bool IsPrimaryKeyExists { get; set; }
+
+        // Tablonun bulunduğu veritabanının yolu
+        [ProtoMember(3)]
+        private string ParentDbString { get; set; }
+
+        // Tablo içerisindeki sütunlar
+        [ProtoMember(4)]        
+        internal List<Column> Columns { get; set; }
+
+        // Tabloda bulunan kayıtlar
+        [ProtoMember(5)]
+        internal List<Record> Records { get; set; }
+
+
+        [ProtoIgnore]
+        public int ColumnCount{ get { return Columns.Count; } }
+
+        [ProtoIgnore]
         public string[] ColumnNames
         {
             get
             {
-                string[] returnVal = new string[columns.Count];
+                string[] returnVal = new string[Columns.Count];
 
-                for (int i = 0; i < columns.Count; i++)
-                    returnVal[i] = columns[i].Name;
+                for (int i = 0; i < Columns.Count; i++)
+                    returnVal[i] = Columns[i].Name;
 
                 return returnVal; 
             }
         }
-        public int RecordCount { get { return records.Count; } }
-        public List<object[]> Records 
+
+        [ProtoIgnore]
+        public int RecordCount { get { return Records.Count; } }
+
+        [ProtoIgnore]
+        public List<object[]> TableRecords 
         { 
             get
             {
@@ -30,14 +58,14 @@ namespace alifeDB.Database.Core
                 List<object[]> returnVal = new List<object[]>();
                 
                 // Tüm kayıtları dolaşır
-                foreach(Record r in records)
+                foreach(Record r in Records)
                 {
                     // Geçerli kayıttaki veriler
                     object[] record = new object[ColumnCount];
 
                     // Kayıttan sütunlarına göre sırasıyla verileri çekip diziye ekler
                     for (int i = 0; i < ColumnCount; i++)
-                        record[i] = r.GetValue(columns[i].Name);
+                        record[i] = r.GetValue(Columns[i].Name);
 
                     // Döndürülecek listeye geçerli kaydın array'i eklenir
                     returnVal.Add(record);
@@ -47,47 +75,29 @@ namespace alifeDB.Database.Core
                 return returnVal;
             } 
         }
-        public string Name
-        {
-            get { return tableName; }
-            set { tableName = value; }
-        }
-        public string ParentDbString { get { return parentDbString; } }
 
-        // Tablonun adı
-        private string tableName;
-        // Tablonun bulunduğu veritabanının yolu
-        private readonly string parentDbString;
-        // Tablo içerisindeki sütunlar
-        internal List<Column> columns;
-        // Tabloda bulunan kayıtlar
-        internal List<Record> records;
-        // Tabloda birincil anahtar var mı?
-        private bool isPrimaryKeyExists;
+        [ProtoIgnore]
+        public string ParentDBString { get { return ParentDbString; } }
 
         // Tablo constructor'ı parametresine tablonun adını alır
         public Table(string tableName, string parentDbString, bool isPrimaryKeyExists)
         {
-            this.tableName = tableName;
-            this.parentDbString = parentDbString;
-            this.isPrimaryKeyExists = isPrimaryKeyExists;
-            columns = new List<Column>();
-            records = new List<Record>();
-
-            // Eğer tabloda birincil anahtar olacaksa sütunların ilk indeksini id isimli bir birincil anahtar olarak ayarlar
-            if (isPrimaryKeyExists)
-                columns[0] = new Column("id", true);
+            Name = tableName;
+            ParentDbString = parentDbString;
+            IsPrimaryKeyExists = isPrimaryKeyExists;
+            Columns = new List<Column>();
+            Records = new List<Record>();
         }
 
         // Tabloya sütun ekler
         public void AddColumn(string columnName)
         {
             // Eğer aynı isimde bir sütun varsa hata döndürür
-            foreach (Column c in columns)
+            foreach (Column c in Columns)
                 if (c.Name == columnName)
-                    throw new AlifeDBException("Sütun zaten mevcut!", parentDbString, tableName);
+                    throw new AlifeDBException("Sütun zaten mevcut!", ParentDbString, Name);
 
-            columns.Add(new Column(columnName));
+            Columns.Add(new Column(columnName));
         }
 
         // Tabloya yeni kayıt ekler
@@ -96,11 +106,11 @@ namespace alifeDB.Database.Core
             if (IsPrimaryKeyExists) {
                 // Yeni eklenecek kaydın birincil anahtarını ayarlar
                 int lastIndexPrimaryKey;
-                lastIndexPrimaryKey = records.Count > 0 ? (int)records[records.Count - 1].values[0].Data : 0;
-                record.values[0].Data = lastIndexPrimaryKey + 1;
+                lastIndexPrimaryKey = Records.Count > 0 ? (int)Records[Records.Count - 1].Values[0].Data : 0;
+                record.Values[0].Data = lastIndexPrimaryKey + 1;
             }
             
-            records.Add(record);
+            Records.Add(record);
         }
 
         // Tablodan birincil anahtarına göre kayıt çeker
@@ -108,19 +118,19 @@ namespace alifeDB.Database.Core
         {
             // Eğer tabloda birincil anahtar yoksa hata döndürür
             if (!IsPrimaryKeyExists)
-                throw new AlifeDBException("Bu tabloda birincil anahtar bulunmamakta!", parentDbString, tableName);
+                throw new AlifeDBException("Bu tabloda birincil anahtar bulunmamakta!", ParentDbString, Name);
 
             // Tüm kayıtlara bakar
-            foreach (Record record in records)
-                if ((int)record.values[0].Data == primaryKey)
+            foreach (Record record in Records)
+                if ((int)record.Values[0].Data == primaryKey)
                     return record;
 
             // Kaydı bulamadıysa hata döndürür
-            throw new AlifeDBException("Kayıt bulunamadı!", parentDbString, tableName);
+            throw new AlifeDBException("Kayıt bulunamadı!", ParentDbString, Name);
         }
         public Record GetRecordByIndex(int index)
         {
-            return records[index];
+            return Records[index];
         }
     }
 }

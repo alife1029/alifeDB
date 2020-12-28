@@ -1,24 +1,20 @@
-﻿using System;
+﻿using ProtoBuf;
 
 namespace alifeDB.Database.Core
 {
-    [Serializable]
+    [ProtoContract]
     public class DataCell
     {
-        public Column Column { get { return column; } }
-        public object Data
-        {
-            get { return data; }
-            set { data = value; }
-        }
+        [ProtoMember(1)]
+        public Column Column { get; set; }
 
-        private readonly Column column;
-        private object data;
+        [ProtoMember(2)]
+        public object Data { get; set; }
         
         public DataCell(Column column, object data)
         {
-            this.column = column;
-            this.data = data;
+            Column = column;
+            Data = data;
         }
     }
 }

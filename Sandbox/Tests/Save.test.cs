@@ -8,7 +8,7 @@ namespace Sandbox.Tests
         public Save()
         {
             DatabaseCursor db = new DatabaseCursor();
-            db.Connect(@"C:\Users\Ali Efe GÜR\Desktop\saveTestAsync.alfdb");
+            db.Connect(@"C:\Users\Ali Efe GÜR\Desktop\saveTest.alfdb");
 
             DateTime start = DateTime.Now;
             DateTime start1 = DateTime.Now;
@@ -37,8 +37,13 @@ namespace Sandbox.Tests
 
             Console.WriteLine("Tüm kayıtlar", (DateTime.Now - start).ToString() + " sürede işlendi!");
 
-            db.CommitAsync();
 
+            DateTime commitStart = DateTime.Now;
+            db.Commit();
+            Console.Write("Kayıt bitiş süresi: ");
+            Console.WriteLine(DateTime.Now - commitStart);
+
+            Console.WriteLine("Tüm işlemlerin bitiş süresi: ");
             Console.WriteLine(DateTime.Now - start);
         }
     }

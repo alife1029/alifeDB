@@ -18,7 +18,8 @@ project "alifeDB"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	links {
-		"%{prj.name}/vendor/protobuf-net/protobuf.dll"
+		"%{prj.name}/vendor/protobuf-net/protobuf.dll",
+		"System.Xml"
 	}
 
 	files {
