@@ -8,8 +8,6 @@ workspace "AlifeDB"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-GUIoutputdir = "{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/GUI"
-SandboxOutputdir = "{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/GUI"
 
 project "alifeDB"
 	location "alifeDB"
@@ -19,16 +17,15 @@ project "alifeDB"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	links {
+		"%{prj.name}/vendor/protobuf-net/protobuf.dll"
+	}
+
 	files {
 		"%{prj.name}/**.**",
 		"%{prj.name}/**.**",
 		"%{prj.name}/**.**",
 		"%{prj.name}/**.**"
-	}
-
-	postbuildcommands {
-		("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/GUI"),
-		("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
 	}
 
 	filter "configurations:Debug"
