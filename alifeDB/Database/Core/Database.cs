@@ -30,6 +30,12 @@ namespace alifeDB.Database.Core
             }
         }
 
+        public Database() 
+        {
+            DbString = "";
+            Tables = new List<Table>();
+        }
+
         // Veritabanı constructor'ı parametresine veritabanının dosya sistemindeki konumunu alır
         public Database(string dbString)
         {

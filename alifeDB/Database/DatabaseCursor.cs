@@ -216,7 +216,7 @@ namespace alifeDB.Database
             object[] fetchedRecord = new object[table.Records[index].Values.Count];
             for (int i = 0; i < table.Records[index].Values.Count; i++)
             {
-                fetchedRecord[i] = table.Records[index].Values[i].Data;
+                fetchedRecord[i] = (object)table.Records[index].Values[i].GetData<object>();
             }
 
             return fetchedRecord;

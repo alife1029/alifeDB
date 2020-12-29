@@ -11,9 +11,8 @@ namespace Sandbox.Examples
             DatabaseCursor database = new DatabaseCursor();
             database.Connect(@"C:\Users\Ali Efe GÜR\Desktop\myDatabase.alfdb");
 
-            database.CreateTableIfNotExists("personalData", true, new string[] 
+            database.CreateTableIfNotExists("personalData", false, new string[] 
             {
-                "id",
                 "name",
                 "last_name"
             });

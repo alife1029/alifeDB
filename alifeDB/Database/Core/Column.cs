@@ -3,12 +3,18 @@
 namespace alifeDB.Database.Core
 {
     [ProtoContract]
-    public struct Column
+    public class Column
     {
         [ProtoMember(1)]
         public bool IsPrimaryKey { get; set; }
         [ProtoMember(2)]
         public string Name { get; set; }
+
+        public Column() 
+        { 
+            IsPrimaryKey = false;
+            Name = "";
+        }
 
         public Column(string columnName)
         {

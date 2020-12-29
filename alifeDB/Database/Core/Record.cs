@@ -10,6 +10,11 @@ namespace alifeDB.Database.Core
         [ProtoMember(1)]
         internal List<DataCell> Values { get; set; }
 
+        public Record() 
+        { 
+            Values = new List<DataCell>();    
+        }
+
         public Record(Table baseTable)
         {
             Values = new List<DataCell>();
@@ -32,7 +37,7 @@ namespace alifeDB.Database.Core
                         // Eğer alan birincil anahtar değilse değeri ata
                         if (!cell.Column.IsPrimaryKey)
                         {
-                            cell.Data = values[i];
+                            cell.SetData(values[i]);
                             break;
                         }
 
@@ -47,7 +52,7 @@ namespace alifeDB.Database.Core
         {
             foreach (DataCell cell in Values)
                 if (cell.Column.Name == column)
-                    cell.Data = value;
+                    cell.SetData(value);
         }
         public object GetValue(string columnName)
         {

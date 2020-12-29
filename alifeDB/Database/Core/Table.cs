@@ -5,7 +5,6 @@ using ProtoBuf;
 namespace alifeDB.Database.Core
 {
     [ProtoContract]
-    [ProtoInclude(1)]
     public class Table
     {
         // Tablonun adı
@@ -79,6 +78,15 @@ namespace alifeDB.Database.Core
         [ProtoIgnore]
         public string ParentDBString { get { return ParentDbString; } }
 
+        public Table()
+        {
+            Name = "";
+            ParentDbString = "";
+            IsPrimaryKeyExists = false;
+            Columns = new List<Column>();
+            Records = new List<Record>();
+        }
+
         // Tablo constructor'ı parametresine tablonun adını alır
         public Table(string tableName, string parentDbString, bool isPrimaryKeyExists)
         {
@@ -106,8 +114,8 @@ namespace alifeDB.Database.Core
             if (IsPrimaryKeyExists) {
                 // Yeni eklenecek kaydın birincil anahtarını ayarlar
                 int lastIndexPrimaryKey;
-                lastIndexPrimaryKey = Records.Count > 0 ? (int)Records[Records.Count - 1].Values[0].Data : 0;
-                record.Values[0].Data = lastIndexPrimaryKey + 1;
+                lastIndexPrimaryKey = Records.Count > 0 ? Records[Records.Count - 1].Values[0].GetData<int>() : 0;
+                record.Values[0].SetData(lastIndexPrimaryKey + 1);
             }
             
             Records.Add(record);
@@ -122,7 +130,7 @@ namespace alifeDB.Database.Core
 
             // Tüm kayıtlara bakar
             foreach (Record record in Records)
-                if ((int)record.Values[0].Data == primaryKey)
+                if (record.Values[0].GetData<int>() == primaryKey)
                     return record;
 
             // Kaydı bulamadıysa hata döndürür
