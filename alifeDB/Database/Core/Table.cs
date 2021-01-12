@@ -73,21 +73,17 @@ namespace alifeDB.Database.Core
             this.isPrimaryKeyExists = isPrimaryKeyExists;
             columns = new List<Column>();
             records = new List<Record>();
-
-            // Eğer tabloda birincil anahtar olacaksa sütunların ilk indeksini id isimli bir birincil anahtar olarak ayarlar
-            if (isPrimaryKeyExists)
-                columns[0] = new Column("id", true);
         }
 
         // Tabloya sütun ekler
-        public void AddColumn(string columnName)
+        public void AddColumn(string columnName, bool primaryKey)
         {
             // Eğer aynı isimde bir sütun varsa hata döndürür
             foreach (Column c in columns)
                 if (c.Name == columnName)
                     throw new AlifeDBException("Sütun zaten mevcut!", parentDbString, tableName);
 
-            columns.Add(new Column(columnName));
+            columns.Add(new Column(columnName, primaryKey));
         }
 
         // Tabloya yeni kayıt ekler

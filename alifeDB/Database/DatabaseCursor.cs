@@ -88,8 +88,11 @@ namespace alifeDB.Database
 
             // Yeni tablo oluşturup veritabanına ekler
             Table table = new Table(tableName, database.DbString, primaryKey);
-            for (int i = 0; i < columns.Length; i++)
-                table.AddColumn(columns[i]);
+            
+            table.AddColumn(columns[0], primaryKey);
+            for (int i = 1; i < columns.Length; i++)
+                table.AddColumn(columns[i], false);
+
             database.Tables.Add(table);
         }
         /// <include file='Docs/DatabaseCursorDoc.xml' path='docs/sync/CreateTableIfNotExists/*'/>
@@ -108,8 +111,10 @@ namespace alifeDB.Database
 
             // Yeni tablo oluşturup veritabanına ekler
             Table table = new Table(tableName, database.DbString, primaryKey);
-            for (int i = 0; i < columns.Length; i++)
-                table.AddColumn(columns[i]);
+
+            table.AddColumn(columns[0], primaryKey);
+            for (int i = 1; i < columns.Length; i++)
+                table.AddColumn(columns[i], false);
 
             database.Tables.Add(table);
         }

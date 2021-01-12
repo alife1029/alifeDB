@@ -47,12 +47,11 @@ namespace GUI.Forms
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            if (tbDbName.Text.Substring(tbDbName.Text.Length - 6) != ".alfdb")
-            {
-                tbDbName.Text += ".alfdb";
-            }
-
-            LoadDatabaseScreen(tbDbPath_CreateDb.Text + "\\" + tbDbName);
+            if (tbDbName.Text.Length >= 6)
+                if (tbDbName.Text.Substring(tbDbName.Text.Length - 6) != ".alfdb")
+                    tbDbName.Text += ".alfdb";
+            
+            LoadDatabaseScreen(tbDbPath_CreateDb.Text + "\\" + tbDbName.Text);
         }
     }
 }
